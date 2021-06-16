@@ -33,7 +33,7 @@ fn main() {
         .expect("Invalid value for baudrate");
 
     let s = SerialPortSettings {
-        baud_rate: baud_rate,
+        baud_rate,
         data_bits: DataBits::Eight,
         flow_control: FlowControl::None,
         parity: Parity::None,
@@ -108,7 +108,7 @@ fn main() {
     println!("Typical scan mode: {}", typical_scan_mode);
 
     match rplidar.check_motor_ctrl_support() {
-        Ok(support) if support == true => {
+        Ok(support) if support => {
             println!("Accessory board is detected and support motor control, starting motor...");
             rplidar.set_motor_pwm(600).expect("failed to start motor");
         }
