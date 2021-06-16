@@ -122,7 +122,7 @@ fn main() {
 
     println!("Starting LIDAR in typical mode...");
 
-    let scan_options = ScanOptions::with_mode(1);
+    let scan_options = ScanOptions::with_mode(0);
 
     let actual_mode = rplidar
         .start_scan_with_options(&scan_options)
@@ -134,8 +134,6 @@ fn main() {
 
     let mut last_plot = Instant::now();
 
-    let mut last_scan = vec![];
-
     loop {
         match rplidar.grab_scan() {
             Ok(mut scan) => {
@@ -145,15 +143,13 @@ fn main() {
                     scan.len()
                 );
 
-                sort_scan(&mut scan);
+                sort_scan(&mut scan).unwrap();
                 // scan.sort();
 
                 let scan = scan
                     .into_iter()
                     .filter(|scan| scan.is_valid())
                     .collect::<Vec<_>>();
-
-                last_scan = scan.clone();
 
                 if last_plot.elapsed() > Duration::from_secs_f32(2.0) {
                     last_plot = Instant::now();
@@ -171,8 +167,7 @@ fn main() {
 
                     chart
                         .draw_series(LineSeries::new(
-                            last_scan
-                                .into_iter()
+                            scan.into_iter()
                                 .map(|point| (point.angle().to_degrees(), point.distance())),
                             &RED,
                         ))

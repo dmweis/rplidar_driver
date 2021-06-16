@@ -23,8 +23,8 @@ impl Checksum {
 
     /// push slice into the `Checksum`
     pub fn push_slice(&mut self, data: &[u8]) {
-        for i in 0..data.len() {
-            self.current ^= data[i];
+        for i in data {
+            self.current ^= i;
         }
     }
 

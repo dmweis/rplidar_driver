@@ -37,11 +37,11 @@ impl ScanPoint {
     }
 
     pub fn is_sync(&self) -> bool {
-        return (self.flag & RPLIDAR_RESP_HQ_FLAG_SYNCBIT) == RPLIDAR_RESP_HQ_FLAG_SYNCBIT;
+        (self.flag & RPLIDAR_RESP_HQ_FLAG_SYNCBIT) == RPLIDAR_RESP_HQ_FLAG_SYNCBIT
     }
 
     pub fn is_valid(&self) -> bool {
-        return self.quality != 0 && self.dist_mm_q2 != 0;
+        self.quality != 0 && self.dist_mm_q2 != 0
     }
 }
 

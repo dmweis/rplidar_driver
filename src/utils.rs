@@ -4,17 +4,18 @@ use std::f32::consts::PI;
 
 const PI2: f32 = PI * 2f32;
 
-fn find_first_valid_index(scan: &Vec<ScanPoint>) -> Option<usize> {
+fn find_first_valid_index(scan: &[ScanPoint]) -> Option<usize> {
+    #[allow(clippy::needless_range_loop)]
     for i in 0..scan.len() {
         if scan[i].is_valid() {
             return Some(i);
         }
     }
 
-    return None;
+    None
 }
 
-fn find_last_valid_index(scan: &Vec<ScanPoint>) -> Option<usize> {
+fn find_last_valid_index(scan: &[ScanPoint]) -> Option<usize> {
     for i in 0..scan.len() {
         let id = scan.len() - i - 1;
 
@@ -23,7 +24,7 @@ fn find_last_valid_index(scan: &Vec<ScanPoint>) -> Option<usize> {
         }
     }
 
-    return None;
+    None
 }
 
 fn tune_head(scan: &mut Vec<ScanPoint>, inc_origin_angle: f32) -> Result<()> {
@@ -39,12 +40,12 @@ fn tune_head(scan: &mut Vec<ScanPoint>, inc_origin_angle: f32) -> Result<()> {
             scan[i].set_angle(expect_angle);
         }
 
-        return Ok(());
+        Ok(())
     } else {
-        return Err(RposError::OperationFail {
+        Err(RposError::OperationFail {
             description: "operation failed".to_owned(),
         }
-        .into());
+        .into())
     }
 }
 
@@ -58,18 +59,18 @@ fn tune_tail(scan: &mut Vec<ScanPoint>, inc_origin_angle: f32) -> Result<()> {
             scan[i].set_angle(expect_angle);
         }
 
-        return Ok(());
+        Ok(())
     } else {
-        return Err(RposError::OperationFail {
+        Err(RposError::OperationFail {
             description: "operation failed".to_owned(),
         }
-        .into());
+        .into())
     }
 }
 
 /// sort scan points
 pub fn sort_scan(scan: &mut Vec<ScanPoint>) -> Result<()> {
-    if scan.len() == 0 {
+    if scan.is_empty() {
         return Ok(());
     }
 
@@ -79,6 +80,7 @@ pub fn sort_scan(scan: &mut Vec<ScanPoint>) -> Result<()> {
     tune_tail(scan, inc_origin_angle)?;
 
     let front_angle = scan[0].angle();
+    #[allow(clippy::needless_range_loop)]
     for i in 1..scan.len() {
         if !scan[i].is_valid() {
             let mut expect_angle = front_angle + (i as f32) * inc_origin_angle;
@@ -91,5 +93,5 @@ pub fn sort_scan(scan: &mut Vec<ScanPoint>) -> Result<()> {
 
     scan.sort();
 
-    return Ok(());
+    Ok(())
 }

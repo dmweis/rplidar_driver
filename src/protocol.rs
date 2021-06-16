@@ -36,8 +36,8 @@ pub struct RplidarHostProtocol {
     decoding_msg: Message, // decode_buffer: RingByteBuffer
 }
 
-impl RplidarHostProtocol {
-    pub fn new() -> RplidarHostProtocol {
+impl Default for RplidarHostProtocol {
+    fn default() -> Self {
         RplidarHostProtocol {
             status: DecodeStatus::WaitSyncByte(0),
             ans_header: Vec::new(),
@@ -45,6 +45,12 @@ impl RplidarHostProtocol {
             response_size: 0,
             decoding_msg: Message::new(0),
         }
+    }
+}
+
+impl RplidarHostProtocol {
+    pub fn new() -> RplidarHostProtocol {
+        Default::default()
     }
 
     fn start_wait_sync_bytes(&mut self, sync_byte_index: usize) {
@@ -70,19 +76,19 @@ impl RplidarHostProtocol {
         if let DecodeStatus::WaitSyncByte(i) = self.status {
             if buf[0] != RPLIDAR_ANS_SYNC_BYTES[i] {
                 self.start_wait_sync_bytes(0);
-                return Ok(1);
+                Ok(1)
             } else if i == RPLIDAR_ANS_SYNC_BYTES.len() - 1 {
                 self.start_wait_ans_header();
-                return Ok(1);
+                Ok(1)
             } else {
                 self.start_wait_sync_bytes(i + 1);
-                return Ok(1);
+                Ok(1)
             }
         } else {
-            return Err(RposError::ProtocolError {
+            Err(RposError::ProtocolError {
                 description: "sync byte status error".to_owned(),
             }
-            .into());
+            .into())
         }
     }
 
@@ -96,21 +102,21 @@ impl RplidarHostProtocol {
             self.decode_ans_header_metadata();
             if self.response_size == 0 {
                 if (self.ans_flag & RPLIDAR_ANS_PKTFLAG_LOOP) == RPLIDAR_ANS_PKTFLAG_LOOP {
-                    return Err(RposError::ProtocolError {
+                    Err(RposError::ProtocolError {
                         description: "received loop answer with no response size".to_owned(),
                     }
-                    .into());
+                    .into())
                 } else {
                     let answer = Ok((bytes_actual_read, Some(self.decoding_msg.clone())));
                     self.reset_decoder();
-                    return answer;
+                    answer
                 }
             } else {
                 self.start_receive_response();
-                return Ok((bytes_actual_read, None));
+                Ok((bytes_actual_read, None))
             }
         } else {
-            return Ok((bytes_actual_read, None));
+            Ok((bytes_actual_read, None))
         }
     }
 
@@ -128,9 +134,9 @@ impl RplidarHostProtocol {
             } else {
                 self.start_wait_sync_bytes(0);
             }
-            return answer;
+            answer
         } else {
-            return Ok((bytes_actual_read, None));
+            Ok((bytes_actual_read, None))
         }
     }
 
@@ -155,14 +161,14 @@ impl ProtocolDecoder for RplidarHostProtocol {
                 }
                 DecodeStatus::WaitAnsHeader => {
                     let (read, msg) = self.decode_ans_header(&buf[i..buf.len()])?;
-                    if let Some(_) = msg {
+                    if msg.is_some() {
                         return Ok((i + read, msg));
                     }
                     i += read;
                 }
                 DecodeStatus::ReceiveResponse => {
                     let (read, msg) = self.decode_response(&buf[i..buf.len()])?;
-                    if let Some(_) = msg {
+                    if msg.is_some() {
                         return Ok((i + read, msg));
                     }
                     i += read;
@@ -170,7 +176,7 @@ impl ProtocolDecoder for RplidarHostProtocol {
             }
         }
 
-        return Ok((i, None));
+        Ok((i, None))
     }
 
     /// Reset the decoder status
@@ -196,7 +202,7 @@ impl ProtocolEncoder for RplidarHostProtocol {
             .into());
         }
 
-        let cmd = if msg.data.len() != 0 {
+        let cmd = if !msg.data.is_empty() {
             msg.cmd | RPLIDAR_CMDFLAG_HAS_PAYLOAD
         } else {
             msg.cmd
@@ -205,7 +211,7 @@ impl ProtocolEncoder for RplidarHostProtocol {
         bytes[0] = RPLIDAR_CMD_SYNC_BYTE;
         bytes[1] = cmd;
 
-        if msg.data.len() != 0 {
+        if !msg.data.is_empty() {
             let mut checksum = Checksum::new();
 
             checksum.push_slice(&bytes[0..2]);
@@ -216,9 +222,9 @@ impl ProtocolEncoder for RplidarHostProtocol {
             bytes[3..3 + msg.data.len()].clone_from_slice(&msg.data);
             bytes[3 + msg.data.len()] = checksum.checksum();
 
-            return Ok(4 + msg.data.len());
+            Ok(4 + msg.data.len())
         } else {
-            return Ok(2);
+            Ok(2)
         }
     }
 
@@ -231,10 +237,10 @@ impl ProtocolEncoder for RplidarHostProtocol {
             .into());
         }
 
-        if msg.data.len() > 0 {
-            return Ok(4 + msg.data.len());
+        if !msg.data.is_empty() {
+            Ok(4 + msg.data.len())
         } else {
-            return Ok(2);
+            Ok(2)
         }
     }
 
@@ -243,10 +249,10 @@ impl ProtocolEncoder for RplidarHostProtocol {
         let estimated_encoded_size = self.estimate_encoded_size(msg)?;
         let mut buf = vec![0; estimated_encoded_size];
         let encoded_size = self.encode(msg, &mut buf[0..estimated_encoded_size])?;
-        return match dest.write_all(&buf[0..encoded_size]) {
+        match dest.write_all(&buf[0..encoded_size]) {
             Ok(()) => Ok(encoded_size),
             Err(err) => Err(err.into()),
-        };
+        }
     }
 
     /// Reset encoder
@@ -263,7 +269,7 @@ mod tests {
         let mut buf = vec![0; encoded_bytes];
         let encoded_bytes = protocol.encode(&msg, &mut buf[0..encoded_bytes])?;
         buf.truncate(encoded_bytes);
-        return Ok(buf);
+        Ok(buf)
     }
 
     #[test]

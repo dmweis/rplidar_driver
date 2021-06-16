@@ -105,7 +105,7 @@ where
     /// ```
     pub fn new(channel: Channel<RplidarHostProtocol, T>) -> RplidarDevice<T> {
         RplidarDevice {
-            channel: channel,
+            channel,
             cached_measurement_nodes: VecDeque::with_capacity(RPLIDAR_DEFAULT_CACHE_DEPTH),
             cached_prev_capsule: CachedPrevCapsule::None,
         }
@@ -139,19 +139,19 @@ where
             return handle_resp!(RPLIDAR_ANS_TYPE_DEVINFO, msg, RplidarResponseDeviceInfo);
         }
 
-        return Err(RposError::OperationTimeout.into());
+        Err(RposError::OperationTimeout.into())
     }
 
     /// Stop lidar
     pub fn stop(&mut self) -> Result<()> {
         self.channel.write(&Message::new(RPLIDAR_CMD_STOP))?;
-        return Ok(());
+        Ok(())
     }
 
     /// Reset RPLIDAR core
     pub fn core_reset(&mut self) -> Result<()> {
         self.channel.write(&Message::new(RPLIDAR_CMD_RESET))?;
-        return Ok(());
+        Ok(())
     }
 
     /// Set motor PWM (via accessory board)
@@ -162,7 +162,7 @@ where
         self.channel
             .write(&Message::with_data(RPLIDAR_CMD_SET_MOTOR_PWM, &payload))?;
 
-        return Ok(());
+        Ok(())
     }
 
     /// Stop motor
@@ -212,22 +212,22 @@ where
 
         if let Some(mut response_msg) = response {
             if response_msg.cmd != RPLIDAR_ANS_TYPE_GET_LIDAR_CONF {
-                return Err(RposError::OperationFail {
+                Err(RposError::OperationFail {
                     description: "answer type mismatch".to_owned(),
                 }
-                .into());
+                .into())
             } else if response_msg.data.len() < 4
                 || LittleEndian::read_u32(&response_msg.data[0..4]) != config_type
             {
-                return Err(RposError::OperationFail {
+                Err(RposError::OperationFail {
                     description: "answer config type mismatch".to_owned(),
                 }
-                .into());
+                .into())
             } else {
-                return Ok(response_msg.data.split_off(4));
+                Ok(response_msg.data.split_off(4))
             }
         } else {
-            return Err(RposError::OperationTimeout.into());
+            Err(RposError::OperationTimeout.into())
         }
     }
 
@@ -268,7 +268,7 @@ where
             timeout,
         )?;
         let us_per_sample = (parse_resp_data!(us_per_sample_data, u32)? as f32) / 256f32;
-        return Ok(us_per_sample);
+        Ok(us_per_sample)
     }
 
     /// get lidar scan mode max distance
@@ -285,7 +285,7 @@ where
             timeout,
         )?;
         let max_distance = (parse_resp_data!(max_distance_data, u32)? as f32) / 256f32;
-        return Ok(max_distance);
+        Ok(max_distance)
     }
 
     /// get scan mode answer type
@@ -321,10 +321,10 @@ where
         if let Ok(name) = std::str::from_utf8(&ans_type_data) {
             return Ok(name.to_owned().trim_matches('\0').to_owned());
         } else {
-            return Err(RposError::ProtocolError {
+            Err(RposError::ProtocolError {
                 description: "invalid scan mode name".to_owned(),
             }
-            .into());
+            .into())
         }
     }
 
@@ -384,7 +384,7 @@ where
                 });
             }
 
-            return Ok(output);
+            Ok(output)
         } else {
             let scan_mode_count = self.get_scan_mode_count_with_timeout(timeout)?;
             let mut output: Vec<ScanMode> = Vec::with_capacity(scan_mode_count as usize);
@@ -393,7 +393,7 @@ where
                 output.push(self.get_scan_mode_with_timeout(i as u16, timeout)?);
             }
 
-            return Ok(output);
+            Ok(output)
         }
     }
 
@@ -476,7 +476,7 @@ where
         } else {
             RPLIDAR_CMD_SCAN
         }))?;
-        return Ok(());
+        Ok(())
     }
 
     /// start express scan with options
@@ -489,7 +489,7 @@ where
         };
         self.channel
             .write(&Message::with_data(RPLIDAR_CMD_EXPRESS_SCAN, &data))?;
-        return Ok(());
+        Ok(())
     }
 
     /// when hq measurement node received
@@ -516,7 +516,7 @@ where
     fn on_measurement_capsuled_msg(&mut self, msg: &Message) -> Result<()> {
         check_sync_and_checksum(msg)?;
         self.on_measurement_capsuled(parse_resp!(msg, RplidarResponseCapsuleMeasurementNodes)?);
-        return Ok(());
+        Ok(())
     }
 
     /// when capsuled measurement response received
@@ -537,7 +537,7 @@ where
             msg,
             RplidarResponseUltraCapsuleMeasurementNodes
         )?);
-        return Ok(());
+        Ok(())
     }
 
     /// when ultra capsuled measurement response received
@@ -561,13 +561,13 @@ where
             msg,
             RplidarResponseHqCapsuledMeasurementNodes
         )?);
-        return Ok(());
+        Ok(())
     }
 
     /// when hq capsuled measurement response received
     fn on_measurement_hq_capsuled(&mut self, nodes: RplidarResponseHqCapsuledMeasurementNodes) {
         for node in nodes.nodes.iter() {
-            self.on_measurement_node_hq(node.clone());
+            self.on_measurement_node_hq(*node);
         }
     }
 
@@ -592,9 +592,9 @@ where
                     .into());
                 }
             }
-            return Ok(());
+            Ok(())
         } else {
-            return Ok(());
+            Ok(())
         }
     }
 
@@ -613,7 +613,7 @@ where
             }
         }
 
-        return Ok(self.cached_measurement_nodes.pop_front().unwrap());
+        Ok(self.cached_measurement_nodes.pop_front().unwrap())
     }
 
     /// read scan frame
@@ -655,7 +655,7 @@ where
             }
         }
 
-        return Ok(out);
+        Ok(out)
     }
 
     /// Get LIDAR health information
@@ -679,7 +679,7 @@ where
             });
         }
 
-        return Err(RposError::OperationTimeout.into());
+        Err(RposError::OperationTimeout.into())
     }
 
     /// Check if the connected LIDAR supports motor control
@@ -700,12 +700,12 @@ where
         if let Some(msg) = resp_msg {
             let support_flag = handle_resp!(RPLIDAR_ANS_TYPE_ACC_BOARD_FLAG, msg, u32)?;
 
-            return Ok(
+            Ok(
                 (support_flag & RPLIDAR_RESP_ACC_BOARD_FLAG_MOTOR_CTRL_SUPPORT_MASK)
                     == RPLIDAR_RESP_ACC_BOARD_FLAG_MOTOR_CTRL_SUPPORT_MASK,
-            );
+            )
         } else {
-            return Err(RposError::OperationTimeout.into());
+            Err(RposError::OperationTimeout.into())
         }
     }
 }
@@ -737,12 +737,12 @@ fn check_sync_and_checksum(msg: &Message) -> Result<()> {
     checksum.push_slice(&msg.data[2..]);
 
     if checksum.checksum() != recv_checksum {
-        return Err(RposError::ProtocolError {
+        Err(RposError::ProtocolError {
             description: "checksum mismatch".to_owned(),
         }
-        .into());
+        .into())
     } else {
-        return Ok(());
+        Ok(())
     }
 }
 
@@ -765,11 +765,11 @@ fn check_sync_and_checksum_hq(msg: &Message) -> Result<()> {
     let recv_checksum = LittleEndian::read_u32(&msg.data[msg.data.len() - 4..msg.data.len()]);
 
     if checksum != recv_checksum {
-        return Err(RposError::ProtocolError {
+        Err(RposError::ProtocolError {
             description: "checksum mismatch".to_owned(),
         }
-        .into());
+        .into())
     } else {
-        return Ok(());
+        Ok(())
     }
 }

@@ -1,11 +1,11 @@
 use super::answers::*;
 use super::CachedPrevCapsule;
 
-const ANGLE_360_Q8: u32 = (360u32 << 8);
-const ANGLE_360_Q16: u32 = (360u32 << 16);
+const ANGLE_360_Q8: u32 = 360u32 << 8;
+const ANGLE_360_Q16: u32 = 360u32 << 16;
 
 fn get_start_angle_q8(nodes: &RplidarResponseCapsuleMeasurementNodes) -> u32 {
-    return ((nodes.start_angle_sync_q6 & 0x7fffu16) as u32) << 2;
+    ((nodes.start_angle_sync_q6 & 0x7fffu16) as u32) << 2
 }
 
 pub fn angle_diff_q8(prev_q8: u32, cur_q8: u32) -> u32 {
@@ -30,7 +30,7 @@ fn parse_cabin(cabin: &RplidarResponseCabinNodes) -> [ParsedNode; 2] {
     let angle_offset_q3_2 =
         (cabin.offset_angles_q3 >> 4) as u16 | ((cabin.distance_angle_2 & 0x3) << 4);
 
-    return [
+    [
         ParsedNode {
             dist_q2: dist_q2_1 as u32,
             angle_offset_q3: angle_offset_q3_1 as u32,
@@ -39,7 +39,7 @@ fn parse_cabin(cabin: &RplidarResponseCabinNodes) -> [ParsedNode; 2] {
             dist_q2: dist_q2_2 as u32,
             angle_offset_q3: angle_offset_q3_2 as u32,
         },
-    ];
+    ]
 }
 
 pub fn check_sync(cur_angle_q16: u32, angle_inc_q16: u32) -> bool {
@@ -52,7 +52,7 @@ fn angle_q6_to_angle_z_q14(angle_q6: u32) -> u16 {
 
 pub fn generate_quality(dist_q2: u32) -> u8 {
     if dist_q2 != 0 {
-        (0x2fu8 << RPLIDAR_RESP_MEASUREMENT_QUALITY_SHIFT)
+        0x2fu8 << RPLIDAR_RESP_MEASUREMENT_QUALITY_SHIFT
     } else {
         0u8
     }
@@ -106,8 +106,8 @@ pub fn parse_capsuled(
             }
         }
 
-        return (output_nodes, CachedPrevCapsule::Capsuled(nodes));
+        (output_nodes, CachedPrevCapsule::Capsuled(nodes))
     } else {
-        return (Vec::new(), CachedPrevCapsule::Capsuled(nodes));
+        (Vec::new(), CachedPrevCapsule::Capsuled(nodes))
     }
 }
