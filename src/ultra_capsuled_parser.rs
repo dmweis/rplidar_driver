@@ -3,8 +3,7 @@ use super::answers::{
 };
 use super::capsuled_parser::{angle_diff_q8, check_sync, generate_flag, generate_quality};
 use super::CachedPrevCapsule;
-
-const PI: f64 = 3.1415926535;
+use std::f64::consts::PI;
 
 struct ParsedNode {
     pub dist_q2: u32,
@@ -12,7 +11,7 @@ struct ParsedNode {
 }
 
 fn get_start_angle_q8(nodes: &RplidarResponseUltraCapsuleMeasurementNodes) -> u32 {
-    return ((nodes.start_angle_sync_q6 & 0x7fffu16) as u32) << 2;
+    ((nodes.start_angle_sync_q6 & 0x7fffu16) as u32) << 2
 }
 
 fn deg_to_rad_q16(deg: f64) -> f64 {
@@ -24,10 +23,9 @@ fn calc_angle_offset_q16(dist: u32) -> i32 {
         const K1: i32 = 98361;
         let k2 = K1 / (dist as i32);
 
-        return (deg_to_rad_q16(8f64) - ((k2 << 6) as f64) - (((k2 * k2 * k2) / 98304) as f64))
-            as i32;
+        (deg_to_rad_q16(8f64) - ((k2 << 6) as f64) - (((k2 * k2 * k2) / 98304) as f64)) as i32
     } else {
-        return deg_to_rad_q16(7.5f64) as i32;
+        deg_to_rad_q16(7.5f64) as i32
     }
 }
 
@@ -50,16 +48,16 @@ fn varbit_scale_decode(scaled: u32) -> (u32, u32) {
         }
     }
 
-    return (0, 0);
+    (0, 0)
 }
 
 /// parse ultra capsuled cabin to (major, predict1, predict2)
 fn parse_cabin(cabin: u32) -> (u32, i32, i32) {
-    return (
+    (
         (cabin & 0xfffu32),
         ((cabin << 10) as i32) >> 22,
         (cabin as i32) >> 22,
-    );
+    )
 }
 
 fn predict(base: u32, predict: i32, scale_lvl: u32) -> u32 {
@@ -89,7 +87,7 @@ fn generate_nodes(
     let dist1 = predict(dist_base1, dist_predict1, scale_lvl_1);
     let dist2 = predict(dist_base2, dist_predict2, scale_lvl_2);
 
-    return [
+    [
         ParsedNode {
             dist_q2: dist0,
             angle_offset_q16: calc_angle_offset_q16(dist0),
@@ -102,7 +100,7 @@ fn generate_nodes(
             dist_q2: dist2,
             angle_offset_q16: calc_angle_offset_q16(dist2),
         },
-    ];
+    ]
 }
 
 fn angle_q16_to_angle_z_q14(angle_q16: u32) -> u16 {
@@ -168,8 +166,8 @@ pub fn parse_ultra_capsuled(
             cur_predict2 = next_predict2;
         }
 
-        return (output_nodes, CachedPrevCapsule::UltraCapsuled(nodes));
+        (output_nodes, CachedPrevCapsule::UltraCapsuled(nodes))
     } else {
-        return (Vec::new(), CachedPrevCapsule::UltraCapsuled(nodes));
+        (Vec::new(), CachedPrevCapsule::UltraCapsuled(nodes))
     }
 }

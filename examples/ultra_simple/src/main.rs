@@ -122,7 +122,7 @@ fn main() {
 
     println!("Starting LIDAR in typical mode...");
 
-    let scan_options = ScanOptions::with_mode(0);
+    let scan_options = ScanOptions::with_mode(1);
 
     let actual_mode = rplidar
         .start_scan_with_options(&scan_options)
