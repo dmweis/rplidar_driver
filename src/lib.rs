@@ -638,7 +638,8 @@ where
                 ))?;
             }
 
-            for i in end..self.cached_measurement_nodes.len() {
+            let end_copy = end;
+            for i in end_copy..self.cached_measurement_nodes.len() {
                 if self.cached_measurement_nodes[i].is_sync() {
                     end = i;
                     break 'outer_loop;
