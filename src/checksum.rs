@@ -1,6 +1,6 @@
 /// checksum calculation for RPLIDAR protocol
 pub struct Checksum {
-    current: u8
+    current: u8,
 }
 
 impl Checksum {

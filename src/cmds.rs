@@ -1,25 +1,24 @@
 // Commands without payload and response
 
 /// Stop measurement of LIDAR
-pub const RPLIDAR_CMD_STOP : u8 = 0x25;
+pub const RPLIDAR_CMD_STOP: u8 = 0x25;
 
 /// Start scan in default mode (usually legacy mode)
-pub const RPLIDAR_CMD_SCAN : u8 = 0x20;
+pub const RPLIDAR_CMD_SCAN: u8 = 0x20;
 
 /// Start force scan (measure distance regardless of LIDAR is spinning or not) in default mode (usually legacy mode)
-pub const RPLIDAR_CMD_FORCE_SCAN : u8 = 0x21;
+pub const RPLIDAR_CMD_FORCE_SCAN: u8 = 0x21;
 
 /// Reset the LIDAR core
-pub const RPLIDAR_CMD_RESET : u8 = 0x40;
-
+pub const RPLIDAR_CMD_RESET: u8 = 0x40;
 
 // Commands without payload but have response
 
 /// Get device information
-pub const RPLIDAR_CMD_GET_DEVICE_INFO : u8 = 0x50;
+pub const RPLIDAR_CMD_GET_DEVICE_INFO: u8 = 0x50;
 
 /// Get device health info
-pub const RPLIDAR_CMD_GET_DEVICE_HEALTH : u8 = 0x52;
+pub const RPLIDAR_CMD_GET_DEVICE_HEALTH: u8 = 0x52;
 
 // pub const RPLIDAR_CMD_GET_SAMPLERATE : u8 = 0x59; //added in fw 1.17
 
@@ -28,7 +27,7 @@ pub const RPLIDAR_CMD_GET_DEVICE_HEALTH : u8 = 0x52;
 // Commands with payload and have response
 
 /// Start express scan (both legacy and extended mode)
-pub const RPLIDAR_CMD_EXPRESS_SCAN : u8 = 0x82; //added in fw 1.17;
+pub const RPLIDAR_CMD_EXPRESS_SCAN: u8 = 0x82; //added in fw 1.17;
 
 /// Options to start scan
 #[repr(packed)]
@@ -43,22 +42,22 @@ pub struct RplidarPayloadExpressScan {
     pub work_flags: u16,
 
     /// Param (reserved, please keep zero)
-    pub param: u16
+    pub param: u16,
 }
 
 // pub const RPLIDAR_CMD_HQ_SCAN : u8 = 0x83; //added in fw 1.24;
 
 /// Get LIDAR configuration
-pub const RPLIDAR_CMD_GET_LIDAR_CONF : u8 = 0x84; //added in fw 1.24;
+pub const RPLIDAR_CMD_GET_LIDAR_CONF: u8 = 0x84; //added in fw 1.24;
 
 // pub const RPLIDAR_CMD_SET_LIDAR_CONF : u8 = 0x85; //added in fw 1.24;
 
 /// Set motor PWM for the accessory board with RPLIDAR A2 and A3 Kit Models
 /// (add for A2 to set RPLIDAR motor pwm when using accessory board)
-pub const RPLIDAR_CMD_SET_MOTOR_PWM : u8 = 0xF0;
+pub const RPLIDAR_CMD_SET_MOTOR_PWM: u8 = 0xF0;
 
 /// Get capability of accessory board
-pub const RPLIDAR_CMD_GET_ACC_BOARD_FLAG : u8 = 0xFF;
+pub const RPLIDAR_CMD_GET_ACC_BOARD_FLAG: u8 = 0xFF;
 
 // LIDAR configurations
 

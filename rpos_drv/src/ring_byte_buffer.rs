@@ -2,9 +2,9 @@ use std::cmp::min;
 use std::io::{Read, Write};
 
 /// A ring byte buffer used to operate byte streams
-/// 
+///
 /// # Example
-/// 
+///
 /// ```rust
 /// # use std::io::Write;
 /// let mut buffer = rpos_drv::RingByteBuffer::with_capacity(100);
@@ -49,7 +49,7 @@ impl RingByteBuffer {
     }
 
     /// current read slice
-    /// 
+    ///
     /// # Example
     /// ```rust
     /// # use std::io::{ stdout, Write };
@@ -60,7 +60,7 @@ impl RingByteBuffer {
     /// buffer.skip_bytes(read);
     /// ```
     pub fn current_read_slice(&self) -> &[u8] {
-        let end = min(self.head+self.size, self.buf.len());
+        let end = min(self.head + self.size, self.buf.len());
         return &self.buf[self.head..end];
     }
 
@@ -73,7 +73,7 @@ impl RingByteBuffer {
     }
 
     /// current write slice
-    fn current_write_slice(&mut self) -> &mut[u8] {
+    fn current_write_slice(&mut self) -> &mut [u8] {
         let current_end = self.tail();
         let write_buf_end = min(self.buf.len(), current_end + self.free_space());
         return &mut self.buf[current_end..write_buf_end];
@@ -94,7 +94,7 @@ impl RingByteBuffer {
             Ok(read) => {
                 self.mark_bytes_as_written(read);
                 Ok(read)
-            },
+            }
             Err(err) => {
                 if err.kind() == std::io::ErrorKind::TimedOut {
                     Ok(0)
@@ -106,7 +106,7 @@ impl RingByteBuffer {
     }
 
     /// read data from upstream to fill the ring buffer
-    /// 
+    ///
     /// # Example
     /// ```rust
     /// # use std::io::{ stdin, Read };
@@ -120,7 +120,7 @@ impl RingByteBuffer {
 
         match self.partial_read_from(upstream) {
             Ok(latter_read) => Ok(read + latter_read),
-            Err(err) => Err(err)
+            Err(err) => Err(err),
         }
     }
 }
@@ -162,7 +162,8 @@ impl Write for RingByteBuffer {
         let latter_written = {
             let current_write_slice = self.current_write_slice();
             let latter_written = min(current_write_slice.len(), buf.len() - written);
-            current_write_slice[0..latter_written].clone_from_slice(&buf[written..written + latter_written]);
+            current_write_slice[0..latter_written]
+                .clone_from_slice(&buf[written..written + latter_written]);
             latter_written
         };
         self.mark_bytes_as_written(latter_written);
@@ -193,7 +194,7 @@ mod tests {
     fn read_and_write() {
         let mut ring_buf = super::RingByteBuffer::with_capacity(6);
 
-        let test_data = vec![1,2,3,4];
+        let test_data = vec![1, 2, 3, 4];
 
         assert_eq!(ring_buf.write(&test_data[..]).unwrap(), 4);
         assert_eq!(ring_buf.len(), 4);

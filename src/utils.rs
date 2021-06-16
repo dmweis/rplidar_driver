@@ -1,8 +1,8 @@
-use super::prelude::*;
 use super::errors::*;
+use super::prelude::*;
 use std::f32::consts::PI;
 
-const PI2:f32 = PI * 2f32;
+const PI2: f32 = PI * 2f32;
 
 fn find_first_valid_index(scan: &Vec<ScanPoint>) -> Option<usize> {
     for i in 0..scan.len() {
@@ -42,14 +42,15 @@ fn tune_head(scan: &mut Vec<ScanPoint>, inc_origin_angle: f32) -> Result<()> {
         return Ok(());
     } else {
         return Err(RposError::OperationFail {
-            description: "operation failed".to_owned()
-        }.into());
+            description: "operation failed".to_owned(),
+        }
+        .into());
     }
 }
 
 fn tune_tail(scan: &mut Vec<ScanPoint>, inc_origin_angle: f32) -> Result<()> {
     if let Some(tail_index) = find_last_valid_index(scan) {
-        for i in tail_index+1..scan.len() {
+        for i in tail_index + 1..scan.len() {
             let mut expect_angle = scan[i - 1].angle() + inc_origin_angle;
             if expect_angle > PI2 {
                 expect_angle -= PI2;
@@ -60,8 +61,9 @@ fn tune_tail(scan: &mut Vec<ScanPoint>, inc_origin_angle: f32) -> Result<()> {
         return Ok(());
     } else {
         return Err(RposError::OperationFail {
-            description: "operation failed".to_owned()
-        }.into());
+            description: "operation failed".to_owned(),
+        }
+        .into());
     }
 }
 
@@ -72,7 +74,7 @@ pub fn sort_scan(scan: &mut Vec<ScanPoint>) -> Result<()> {
     }
 
     let inc_origin_angle = PI2 / (scan.len() as f32);
-    
+
     tune_head(scan, inc_origin_angle)?;
     tune_tail(scan, inc_origin_angle)?;
 
@@ -88,6 +90,6 @@ pub fn sort_scan(scan: &mut Vec<ScanPoint>) -> Result<()> {
     }
 
     scan.sort();
-    
+
     return Ok(());
 }

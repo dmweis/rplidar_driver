@@ -22,7 +22,9 @@ fn main() {
     }
 
     let serial_port = &args[1];
-    let baud_rate = args.get(2).unwrap_or(&String::from("115200"))
+    let baud_rate = args
+        .get(2)
+        .unwrap_or(&String::from("115200"))
         .parse::<u32>()
         .expect("Invalid value for baudrate");
 
@@ -108,10 +110,10 @@ fn main() {
         Ok(support) if support == true => {
             println!("Accessory board is detected and support motor control, starting motor...");
             rplidar.set_motor_pwm(600).expect("failed to start motor");
-        },
+        }
         Ok(_) => {
             println!("Accessory board is detected, but doesn't support motor control");
-        },
+        }
         Err(_) => {
             println!("Accessory board isn't detected");
         }
@@ -130,7 +132,11 @@ fn main() {
     loop {
         match rplidar.grab_scan() {
             Ok(scan) => {
-                println!("[{:6}s] {} points per scan", start_time.elapsed().as_secs(), scan.len());
+                println!(
+                    "[{:6}s] {} points per scan",
+                    start_time.elapsed().as_secs(),
+                    scan.len()
+                );
 
                 /*
                  for scan_point in scan {

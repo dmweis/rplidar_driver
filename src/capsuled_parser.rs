@@ -1,5 +1,5 @@
-use super::CachedPrevCapsule;
 use super::answers::*;
+use super::CachedPrevCapsule;
 
 const ANGLE_360_Q8: u32 = (360u32 << 8);
 const ANGLE_360_Q16: u32 = (360u32 << 16);
@@ -18,10 +18,10 @@ pub fn angle_diff_q8(prev_q8: u32, cur_q8: u32) -> u32 {
 
 pub struct ParsedNode {
     pub dist_q2: u32,
-    pub angle_offset_q3: u32
+    pub angle_offset_q3: u32,
 }
 
-fn parse_cabin(cabin:&RplidarResponseCabinNodes) -> [ParsedNode;2] {
+fn parse_cabin(cabin: &RplidarResponseCabinNodes) -> [ParsedNode; 2] {
     let dist_q2_1 = cabin.distance_angle_1 & 0xfffc;
     let dist_q2_2 = cabin.distance_angle_2 & 0xfffc;
 
@@ -33,13 +33,13 @@ fn parse_cabin(cabin:&RplidarResponseCabinNodes) -> [ParsedNode;2] {
     return [
         ParsedNode {
             dist_q2: dist_q2_1 as u32,
-            angle_offset_q3: angle_offset_q3_1 as u32
+            angle_offset_q3: angle_offset_q3_1 as u32,
         },
         ParsedNode {
             dist_q2: dist_q2_2 as u32,
-            angle_offset_q3: angle_offset_q3_2 as u32
+            angle_offset_q3: angle_offset_q3_2 as u32,
         },
-    ]
+    ];
 }
 
 pub fn check_sync(cur_angle_q16: u32, angle_inc_q16: u32) -> bool {
@@ -59,10 +59,18 @@ pub fn generate_quality(dist_q2: u32) -> u8 {
 }
 
 pub fn generate_flag(sync: bool) -> u8 {
-    if sync { 1u8 } else { 0u8 }
+    if sync {
+        1u8
+    } else {
+        0u8
+    }
 }
 
-pub fn to_hq(node: &ParsedNode, cur_angle_raw_q16: u32, angle_inc_q16: u32) -> RplidarResponseMeasurementNodeHq {
+pub fn to_hq(
+    node: &ParsedNode,
+    cur_angle_raw_q16: u32,
+    angle_inc_q16: u32,
+) -> RplidarResponseMeasurementNodeHq {
     let angle_q6 = cur_angle_raw_q16 - ((node.angle_offset_q3 << 13) >> 10);
     let sync = check_sync(cur_angle_raw_q16, angle_inc_q16);
 
@@ -70,13 +78,16 @@ pub fn to_hq(node: &ParsedNode, cur_angle_raw_q16: u32, angle_inc_q16: u32) -> R
         angle_z_q14: angle_q6_to_angle_z_q14(angle_q6),
         dist_mm_q2: node.dist_q2 as u32,
         quality: generate_quality(node.dist_q2),
-        flag: generate_flag(sync)
+        flag: generate_flag(sync),
     }
 }
 
-pub fn parse_capsuled(cached_prev: &CachedPrevCapsule, nodes: RplidarResponseCapsuleMeasurementNodes) -> (Vec<RplidarResponseMeasurementNodeHq>, CachedPrevCapsule) {
+pub fn parse_capsuled(
+    cached_prev: &CachedPrevCapsule,
+    nodes: RplidarResponseCapsuleMeasurementNodes,
+) -> (Vec<RplidarResponseMeasurementNodeHq>, CachedPrevCapsule) {
     if let CachedPrevCapsule::Capsuled(prev_capsule) = cached_prev {
-        let mut output_nodes : Vec<RplidarResponseMeasurementNodeHq> = Vec::with_capacity(32);
+        let mut output_nodes: Vec<RplidarResponseMeasurementNodeHq> = Vec::with_capacity(32);
 
         let cur_start_angle_q8 = get_start_angle_q8(&nodes);
         let prev_start_angle_q8 = get_start_angle_q8(&prev_capsule);

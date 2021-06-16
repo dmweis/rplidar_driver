@@ -1,6 +1,6 @@
-use std::f32::consts::PI;
 use super::answers::RPLIDAR_RESP_HQ_FLAG_SYNCBIT;
 use std::cmp::Ordering;
+use std::f32::consts::PI;
 
 /// Scan point in a particular laser scan
 #[derive(Debug, Clone, Eq)]
@@ -16,7 +16,7 @@ impl ScanPoint {
         return (self.angle_z_q14 as f32) / 16384f32 / 2f32 * PI;
     }
 
-    pub fn set_angle(&mut self, angle:f32) {
+    pub fn set_angle(&mut self, angle: f32) {
         self.angle_z_q14 = (angle * 16384f32 * 2f32 / PI) as u16;
     }
 
@@ -52,9 +52,9 @@ impl PartialOrd for ScanPoint {
 impl PartialEq for ScanPoint {
     fn eq(&self, other: &ScanPoint) -> bool {
         self.angle_z_q14 == other.angle_z_q14
-        && self.dist_mm_q2 == other.dist_mm_q2
-        && self.quality == other.quality
-        && self.flag == other.flag
+            && self.dist_mm_q2 == other.dist_mm_q2
+            && self.quality == other.quality
+            && self.flag == other.flag
     }
 }
 
@@ -133,5 +133,5 @@ impl ScanOptions {
 pub enum Health {
     Healthy,
     Warning(u16),
-    Error(u16)
+    Error(u16),
 }

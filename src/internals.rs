@@ -1,5 +1,5 @@
-use std::time::Duration;
 use super::answers::*;
+use std::time::Duration;
 
 /// Default timeout when communicating with RPLIDAR
 pub const RPLIDAR_DEFAULT_TIMEOUT: Duration = Duration::from_secs(1);
