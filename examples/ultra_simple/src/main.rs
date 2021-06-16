@@ -148,7 +148,7 @@ fn main() {
 
                 let scan = scan
                     .into_iter()
-                    .filter(|scan| scan.is_valid())
+                    // .filter(|scan| scan.is_valid())
                     .collect::<Vec<_>>();
 
                 if last_plot.elapsed() > Duration::from_secs_f32(2.0) {
