@@ -13,7 +13,11 @@ pub struct ScanPoint {
 
 impl ScanPoint {
     pub fn angle(&self) -> f32 {
-        return (self.angle_z_q14 as f32) / 16384f32 / 2f32 * PI;
+        (self.angle_z_q14 as f32) / 16384f32 / 2f32 * PI
+    }
+
+    pub fn raw_angle(&self) -> f32 {
+        self.angle_z_q14 as f32
     }
 
     pub fn set_angle(&mut self, angle: f32) {
@@ -21,7 +25,11 @@ impl ScanPoint {
     }
 
     pub fn distance(&self) -> f32 {
-        return (self.dist_mm_q2 as f32) / 4000f32;
+        (self.dist_mm_q2 as f32) / 4000f32
+    }
+
+    pub fn raw_distance(&self) -> f32 {
+        self.dist_mm_q2 as f32
     }
 
     pub fn set_distance(&mut self, dist: f32) {

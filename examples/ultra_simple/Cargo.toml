@@ -9,3 +9,4 @@ rplidar_drv = { path = "../.." }
 rpos_drv = { path = "../../rpos_drv" }
 serialport = { version = "3.1.0", default-features = false, features = [] }
 hex-slice = "0.1.4"
+plotters = "0.3.1"

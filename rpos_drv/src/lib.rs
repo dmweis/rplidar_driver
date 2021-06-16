@@ -12,5 +12,6 @@ mod prelude;
 mod ring_byte_buffer;
 
 pub use self::channel::*;
+pub use self::errors::*;
 pub use self::prelude::*;
 pub use self::ring_byte_buffer::RingByteBuffer;

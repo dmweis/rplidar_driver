@@ -1,5 +1,4 @@
 pub use failure::{Error, Fail};
-use std::error;
 
 #[derive(Fail, Debug)]
 pub enum RposError {

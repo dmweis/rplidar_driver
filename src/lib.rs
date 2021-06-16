@@ -40,8 +40,7 @@ use std::time::{Duration, Instant};
 const RPLIDAR_GET_LIDAR_CONF_START_VERSION: u16 = ((1 << 8) | (24)) as u16;
 
 /// Rplidar device driver
-#[derive(Debug)]
-pub struct RplidarDevice<T: ?Sized> {
+pub struct RplidarDevice<T> {
     channel: Channel<RplidarHostProtocol, T>,
     cached_measurement_nodes: VecDeque<ScanPoint>,
     cached_prev_capsule: CachedPrevCapsule,
@@ -92,7 +91,7 @@ impl From<RplidarResponseMeasurementNodeHq> for ScanPoint {
     }
 }
 
-impl<T: ?Sized> RplidarDevice<T>
+impl<T> RplidarDevice<T>
 where
     T: Read + Write,
 {
@@ -119,7 +118,7 @@ where
     /// let mut serial_port = serialport::open(serial_port_name)?;
     /// let rplidar_device = RplidarDevice::with_stream(serial_port);
     /// ```
-    pub fn with_stream(stream: Box<T>) -> RplidarDevice<T> {
+    pub fn with_stream(stream: T) -> RplidarDevice<T> {
         RplidarDevice::<T>::new(rpos_drv::Channel::new(RplidarHostProtocol::new(), stream))
     }
 
@@ -427,6 +426,33 @@ where
         };
 
         let scan_mode_info = self.get_scan_mode_with_timeout(scan_mode, timeout)?;
+        // TODO (David): What is this? The function above doesn't timeout for me
+        // let scan_mode_info = match scan_mode {
+        //     0 => ScanMode {
+        //         id: 0,
+        //         us_per_sample: 1000000f32 / 2000f32,
+        //         max_distance: 8000f32,
+        //         ans_type: RPLIDAR_ANS_TYPE_MEASUREMENT,
+        //         name: "Standard".to_owned(),
+        //     },
+        //     1 => ScanMode {
+        //         id: 1,
+        //         us_per_sample: 1000000f32 / 4000f32,
+        //         max_distance: 16000f32,
+        //         ans_type: RPLIDAR_ANS_TYPE_MEASUREMENT_CAPSULED,
+        //         name: "Express".to_owned(),
+        //     },
+        //     _ => {
+        //         println!("RPLIDAR.RS WARNING: idk what that scan mode is, you proabbly need to fix the code yourself :(");
+        //         ScanMode {
+        //             id: 1,
+        //             us_per_sample: 1000000f32 / 4000f32,
+        //             max_distance: 16000f32,
+        //             ans_type: RPLIDAR_ANS_TYPE_MEASUREMENT_CAPSULED,
+        //             name: "Express".to_owned(),
+        //         }
+        //     }
+        // };
 
         match scan_mode {
             0 => self.legacy_start_scan(options.force_scan)?,
@@ -440,7 +466,7 @@ where
             }
         }
 
-        return Ok(scan_mode_info);
+        Ok(scan_mode_info)
     }
 
     /// use legacy command to start scan
@@ -495,6 +521,7 @@ where
 
     /// when capsuled measurement response received
     fn on_measurement_capsuled(&mut self, nodes: RplidarResponseCapsuleMeasurementNodes) {
+        // TODO: Here
         let (parsed_nodes, new_cached_capsuled) = parse_capsuled(&self.cached_prev_capsule, nodes);
         self.cached_prev_capsule = new_cached_capsuled;
 

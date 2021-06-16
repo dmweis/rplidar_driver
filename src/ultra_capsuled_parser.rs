@@ -114,6 +114,8 @@ fn to_hq(
     cur_angle_raw_q16: u32,
     angle_inc_q16: u32,
 ) -> RplidarResponseMeasurementNodeHq {
+    // TODO (David): What is this?
+    // let angle_q16 = (cur_angle_raw_q16 as i32) - (node.angle_offset_q16 as f64) as i32;
     let angle_q16 =
         (cur_angle_raw_q16 as i32) - (node.angle_offset_q16 as f64 * 180f64 / PI) as i32;
     let sync = check_sync(cur_angle_raw_q16, angle_inc_q16);
