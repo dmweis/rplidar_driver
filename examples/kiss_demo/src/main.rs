@@ -5,16 +5,18 @@ extern crate serialport;
 
 use hex_slice::AsHex;
 
+use kiss3d::light::Light;
+use kiss3d::nalgebra::Point3;
+use kiss3d::window::Window;
 use rplidar_drv::utils::sort_scan;
 use rplidar_drv::ScanOptions;
 use rplidar_drv::{Health, RplidarDevice, RplidarHostProtocol};
 use rpos_drv::{Channel, RposError};
 use serialport::prelude::*;
-use std::time::{Duration, Instant};
+use std::thread::sleep;
+use std::time::Duration;
 
 use std::env;
-
-use plotters::prelude::*;
 
 fn main() {
     let args: Vec<String> = env::args().collect();
@@ -25,7 +27,7 @@ fn main() {
         return;
     }
 
-    let serial_port = &args[1];
+    let port_name = &args[1];
     let baud_rate = args
         .get(2)
         .unwrap_or(&String::from("115200"))
@@ -42,7 +44,7 @@ fn main() {
     };
 
     let mut serial_port =
-        serialport::open_with_settings(serial_port, &s).expect("failed to open serial port");
+        serialport::open_with_settings(port_name, &s).expect("failed to open serial port");
 
     serial_port
         .write_data_terminal_ready(false)
@@ -132,7 +134,11 @@ fn main() {
 
     let start_time = std::time::Instant::now();
 
-    let mut last_plot = Instant::now();
+    let mut window = Window::new("Kiss3d: points");
+
+    window.set_light(Light::StickToCamera);
+    window.set_point_size(10.0);
+    window.set_background_color(0.0, 0.0, 0.0);
 
     loop {
         match rplidar.grab_scan() {
@@ -150,38 +156,27 @@ fn main() {
                     .filter(|scan| scan.is_valid())
                     .collect::<Vec<_>>();
 
-                if last_plot.elapsed() > Duration::from_secs_f32(2.0) {
-                    last_plot = Instant::now();
-                    let root = BitMapBackend::new("test_plot.png", (640, 480)).into_drawing_area();
-                    root.fill(&WHITE).unwrap();
-                    let mut chart = ChartBuilder::on(&root)
-                        .caption("y=x^2", ("sans-serif", 50).into_font())
-                        .margin(5)
-                        .x_label_area_size(30)
-                        .y_label_area_size(30)
-                        .build_cartesian_2d(0f32..360f32, 0f32..12f32)
-                        .unwrap();
+                let points = scan
+                    .into_iter()
+                    .map(|scan_point| {
+                        let x = scan_point.distance() * (-scan_point.angle()).cos();
+                        let y = scan_point.distance() * (-scan_point.angle()).sin();
+                        Point3::new(x, y, 0.0).yzx()
+                    })
+                    .collect::<Vec<_>>();
 
-                    chart.configure_mesh().draw().unwrap();
-
-                    chart
-                        .draw_series(LineSeries::new(
-                            scan.into_iter()
-                                .map(|point| (point.angle().to_degrees(), point.distance())),
-                            &RED,
-                        ))
-                        .unwrap()
-                        .label("laser scan")
-                        .legend(|(x, y)| PathElement::new(vec![(x, y), (x + 20, y)], &RED));
-
-                    chart
-                        .configure_series_labels()
-                        .background_style(&WHITE.mix(0.8))
-                        .border_style(&BLACK)
-                        .draw()
-                        .unwrap();
+                for point in points {
+                    window.draw_point(&point, &Point3::new(1.0, 0.0, 0.0));
                 }
-
+                window.draw_point(&Point3::new(0.0, 0.0, 0.0), &Point3::new(0.0, 1.0, 0.0));
+                window.draw_line(
+                    &Point3::new(0.0, 0.0, 0.0),
+                    &Point3::new(1.0, 0.0, 0.0).yzx(),
+                    &Point3::new(0.0, 1.0, 0.0),
+                );
+                if !window.render() {
+                    break;
+                }
                 // for scan_point in scan {
                 //     println!(
                 //         "    Angle: {:5.2}, Distance: {:8.4}, Valid: {:5}, Sync: {:5}",
@@ -202,4 +197,18 @@ fn main() {
             }
         }
     }
+
+    println!("HI");
+    rplidar.stop_motor().unwrap();
+    sleep(Duration::from_secs(4));
+    drop(rplidar);
+
+    // lmao. This is one way to stop the motors
+
+    let mut serial_port =
+        serialport::open_with_settings(port_name, &s).expect("failed to open serial port");
+
+    serial_port
+        .write_data_terminal_ready(true)
+        .expect("failed to clear DTR");
 }

@@ -26,5 +26,6 @@ crc = "1.8.1"
 members = [
     ".",
     "rpos_drv",
-    "examples/ultra_simple"
+    "examples/ultra_simple",
+    "examples/kiss_demo"
 ]
