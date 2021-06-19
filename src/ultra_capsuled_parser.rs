@@ -143,7 +143,8 @@ pub fn parse_ultra_capsuled(
 
         let (mut cur_major, mut cur_predict1, mut cur_predict2) =
             parse_cabin(prev_capsule.ultra_cabins[0]);
-        let cabin_count = unsafe { prev_capsule.ultra_cabins.len() };
+        let prev_ultra_cabin = prev_capsule.ultra_cabins;
+        let cabin_count = prev_ultra_cabin.len();
 
         for i in 0..cabin_count {
             let next_cabin = if i == cabin_count - 1 {
