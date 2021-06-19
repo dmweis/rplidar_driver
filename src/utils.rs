@@ -44,8 +44,7 @@ fn tune_head(scan: &mut Vec<ScanPoint>, inc_origin_angle: f32) -> Result<()> {
     } else {
         Err(RposError::OperationFail {
             description: "operation failed".to_owned(),
-        }
-        .into())
+        })
     }
 }
 
@@ -63,8 +62,7 @@ fn tune_tail(scan: &mut Vec<ScanPoint>, inc_origin_angle: f32) -> Result<()> {
     } else {
         Err(RposError::OperationFail {
             description: "operation failed".to_owned(),
-        }
-        .into())
+        })
     }
 }
 

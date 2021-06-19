@@ -13,7 +13,7 @@ name = "rplidar_driver"
 path = "src/lib.rs"
 
 [dependencies]
-failure = "0.1.5"
+thiserror = "1.0"
 byteorder = "1.2.7"
 crc = "1.8.1"
 serialport = { version = "4.0", default-features = false }

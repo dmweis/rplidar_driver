@@ -1,26 +1,33 @@
-pub use failure::{Error, Fail};
+use std::io;
+use thiserror::Error;
 
-#[derive(Fail, Debug)]
+#[derive(Error, Debug)]
 pub enum RposError {
     /// The execution of operation failed
-    #[fail(display = "operation failed: {}", description)]
+    #[error("operation failed: {}", description)]
     OperationFail { description: String },
 
     /// The execution of operation is timed out
-    #[fail(display = "operation timeout")]
+    #[error("operation timeout")]
     OperationTimeout,
 
     /// The device doesn't support this operation
-    #[fail(display = "operation not support")]
+    #[error("operation not support")]
     OperationNotSupport,
 
     /// The decoding data is invalid according to current protocol
-    #[fail(display = "protocol error: {}", description)]
+    #[error("protocol error: {}", description)]
     ProtocolError { description: String },
 
     /// The buffer is too small for message encoding
-    #[fail(display = "buffer is too small for message encoding")]
+    #[error("buffer is too small for message encoding")]
     BufferTooSmall,
+
+    #[error("Io error")]
+    IoError(#[from] io::Error),
+
+    #[error("Serial port error")]
+    SerialPortError(#[from] serialport::Error),
 }
 
-pub type Result<T> = std::result::Result<T, Error>;
+pub type Result<T> = std::result::Result<T, RposError>;

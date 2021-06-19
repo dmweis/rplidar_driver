@@ -112,7 +112,7 @@ where
             }
         }
 
-        Err(RposError::OperationTimeout.into())
+        Err(RposError::OperationTimeout)
     }
 
     /// Write message to channel

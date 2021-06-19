@@ -87,8 +87,7 @@ impl RplidarHostProtocol {
         } else {
             Err(RposError::ProtocolError {
                 description: "sync byte status error".to_owned(),
-            }
-            .into())
+            })
         }
     }
 
@@ -104,8 +103,7 @@ impl RplidarHostProtocol {
                 if (self.ans_flag & RPLIDAR_ANS_PKTFLAG_LOOP) == RPLIDAR_ANS_PKTFLAG_LOOP {
                     Err(RposError::ProtocolError {
                         description: "received loop answer with no response size".to_owned(),
-                    }
-                    .into())
+                    })
                 } else {
                     let answer = Ok((bytes_actual_read, Some(self.decoding_msg.clone())));
                     self.reset_decoder();
@@ -192,14 +190,13 @@ impl ProtocolEncoder for RplidarHostProtocol {
         let estimated_encoded_size = self.estimate_encoded_size(msg)?;
 
         if estimated_encoded_size > bytes.len() {
-            return Err(RposError::BufferTooSmall.into());
+            return Err(RposError::BufferTooSmall);
         }
 
         if msg.data.len() > 255 {
             return Err(RposError::OperationFail {
                 description: "payload too big".to_owned(),
-            }
-            .into());
+            });
         }
 
         let cmd = if !msg.data.is_empty() {
@@ -233,8 +230,7 @@ impl ProtocolEncoder for RplidarHostProtocol {
         if msg.data.len() > 255 {
             return Err(RposError::OperationFail {
                 description: "payload too big".to_owned(),
-            }
-            .into());
+            });
         }
 
         if !msg.data.is_empty() {

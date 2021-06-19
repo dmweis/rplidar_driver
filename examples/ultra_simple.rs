@@ -161,14 +161,10 @@ fn main() {
                 //     )
                 // }
             }
-            Err(err) => {
-                if let Some(RposError::OperationTimeout) = err.downcast_ref::<RposError>() {
-                    continue;
-                } else {
-                    println!("Error: {:?}", err);
-                    break;
-                }
-            }
+            Err(err) => match err {
+                RposError::OperationTimeout => continue,
+                _ => println!("Error: {:?}", err),
+            },
         }
     }
 }
