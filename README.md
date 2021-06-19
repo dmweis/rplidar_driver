@@ -1,5 +1,9 @@
 # Rust driver for RPlidar A1
 
+[![Rust](https://github.com/dmweis/rplidar_driver/actions/workflows/general.yml/badge.svg)](https://github.com/dmweis/rplidar_driver/actions/workflows/general.yml)
+[![codecov](https://codecov.io/gh/dmweis/rplidar_driver/branch/main/graph/badge.svg)](https://codecov.io/gh/dmweis/rplidar_driver)
+[![Private docs](https://github.com/dmweis/rplidar_driver/workflows/Deploy%20Docs%20to%20GitHub%20Pages/badge.svg)](https://davidweis.dev/rplidar_driver/rplidar_driver/index.html)
+
 This driver is based on [rplidar.rs](https://github.com/cnwzhjs/rplidar.rs) by [cnwzhjs](https://github.com/cnwzhjs) with some merges from [A fork](https://github.com/RoboticsTeam4904/rplidar.rs) by [RoboticsTeam4904](https://github.com/RoboticsTeam4904).
 
 I am not associated with Slamtec in any way.
