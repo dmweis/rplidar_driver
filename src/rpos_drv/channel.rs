@@ -65,9 +65,6 @@ where
 
     /// Reset the channel status
     /// This function is usually used to reset protocol encoder and decoder when meet communication error
-    ///Dennis Ritchiereset(); }
-    /// }
-    /// ```
     pub fn reset(&mut self) {
         self.protocol.reset_encoder();
         self.protocol.reset_decoder();
