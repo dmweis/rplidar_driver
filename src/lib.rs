@@ -94,17 +94,96 @@ impl From<RplidarResponseMeasurementNodeHq> for ScanPoint {
     }
 }
 
+pub trait RplidarDriver {
+    fn get_device_info(&mut self) -> Result<RplidarResponseDeviceInfo>;
+
+    /// get device info of the RPLIDAR with timeout
+    fn get_device_info_with_timeout(
+        &mut self,
+        timeout: Duration,
+    ) -> Result<RplidarResponseDeviceInfo>;
+
+    /// Stop lidar
+    fn stop(&mut self) -> Result<()>;
+
+    /// Reset RPLIDAR core
+    fn core_reset(&mut self) -> Result<()>;
+
+    /// Set motor PWM (via accessory board)
+    fn set_motor_pwm(&mut self, pwm: u16) -> Result<()>;
+
+    /// Stop motor
+    fn stop_motor(&mut self) -> Result<()>;
+
+    /// Start motor
+    fn start_motor(&mut self) -> Result<()>;
+
+    /// get typical scan mode of target LIDAR
+    fn get_typical_scan_mode(&mut self) -> Result<u16>;
+
+    /// get typical scan mode of target LIDAR with timeout
+    fn get_typical_scan_mode_with_timeout(&mut self, timeout: Duration) -> Result<u16>;
+
+    /// get all supported scan modes supported by the LIDAR
+    fn get_all_supported_scan_modes(&mut self) -> Result<Vec<ScanMode>>;
+
+    /// get all supported scan modes supported by the LIDAR with timeout
+    fn get_all_supported_scan_modes_with_timeout(
+        &mut self,
+        timeout: Duration,
+    ) -> Result<Vec<ScanMode>>;
+
+    /// start scan
+    fn start_scan(&mut self) -> Result<ScanMode>;
+
+    /// start scan with timeout
+    fn start_scan_with_timeout(&mut self, timeout: Duration) -> Result<ScanMode>;
+
+    /// start scan with options
+    fn start_scan_with_options(&mut self, options: &ScanOptions) -> Result<ScanMode>;
+    /// start scan with options and non-default timeout
+    fn start_scan_with_options_and_timeout(
+        &mut self,
+        options: &ScanOptions,
+        timeout: Duration,
+    ) -> Result<ScanMode>;
+
+    /// read scan point
+    fn grab_scan_point(&mut self) -> Result<ScanPoint>;
+
+    /// read scan point with timeout
+    fn grab_scan_point_with_timeout(&mut self, timeout: Duration) -> Result<ScanPoint>;
+
+    /// read scan frame
+    fn grab_scan(&mut self) -> Result<Vec<ScanPoint>>;
+
+    /// read scan frame
+    fn grab_scan_with_timeout(&mut self, timeout: Duration) -> Result<Vec<ScanPoint>>;
+
+    /// Get LIDAR health information
+    fn get_device_health(&mut self) -> Result<Health>;
+
+    /// Get LIDAR health information
+    fn get_device_health_with_timeout(&mut self, timeout: Duration) -> Result<Health>;
+
+    /// Check if the connected LIDAR supports motor control
+    fn check_motor_ctrl_support(&mut self) -> Result<bool>;
+
+    /// Check if the connected LIDAR supports motor control with timeout
+    fn check_motor_ctrl_support_with_timeout(&mut self, timeout: Duration) -> Result<bool>;
+}
+
 #[cfg(unix)]
 impl RplidarDevice<TTYPort> {
     /// Construct a new RplidarDevice from a serial port address
     ///
-    pub fn open_port(port_name: &str) -> Result<Self> {
+    /// You should use the `open_port` method if you want this boxed
+    pub fn open_native_port(port_name: &str) -> Result<Self> {
         let mut port = serialport::new(port_name, A1_DEFAULT_BAUDRATE)
             .timeout(Duration::from_millis(1))
             .open_native()?;
 
         port.write_data_terminal_ready(false)?;
-        // Ok(RplidarDevice::with_stream(port))
         let channel = rpos_drv::Channel::new(RplidarHostProtocol::new(), port);
         Ok(RplidarDevice {
             channel,
@@ -112,25 +191,35 @@ impl RplidarDevice<TTYPort> {
             cached_prev_capsule: CachedPrevCapsule::None,
         })
     }
+
+    /// Construct a new RplidarDriver from a serial port address
+    pub fn open_port(port_name: &str) -> Result<Box<dyn RplidarDriver>> {
+        Ok(Box::new(Self::open_native_port(port_name)?))
+    }
 }
 
 #[cfg(windows)]
 impl RplidarDevice<COMPort> {
     /// Construct a new RplidarDevice from a serial port address
     ///
-    pub fn open_port(port_name: &str) -> Result<Self> {
+    /// You should use the `open_port` method if you want this boxed
+    pub fn open_native_port(port_name: &str) -> Result<Self> {
         let mut port = serialport::new(port_name, A1_DEFAULT_BAUDRATE)
             .timeout(Duration::from_millis(1))
             .open_native()?;
 
         port.write_data_terminal_ready(false)?;
-        // Ok(RplidarDevice::with_stream(port))
         let channel = rpos_drv::Channel::new(RplidarHostProtocol::new(), port);
         Ok(RplidarDevice {
             channel,
             cached_measurement_nodes: VecDeque::with_capacity(RPLIDAR_DEFAULT_CACHE_DEPTH),
             cached_prev_capsule: CachedPrevCapsule::None,
         })
+    }
+
+    /// Construct a new RplidarDriver from a serial port address
+    pub fn open_port(port_name: &str) -> Result<Box<dyn RplidarDriver>> {
+        Ok(Box::new(Self::open_native_port(port_name)?))
     }
 }
 
@@ -164,74 +253,6 @@ where
     pub fn with_stream(port: T) -> Self {
         RplidarDevice::new(rpos_drv::Channel::new(RplidarHostProtocol::new(), port))
     }
-
-    /// get device info of the RPLIDAR
-    pub fn get_device_info(&mut self) -> Result<RplidarResponseDeviceInfo> {
-        self.get_device_info_with_timeout(RPLIDAR_DEFAULT_TIMEOUT)
-    }
-
-    /// get device info of the RPLIDAR with timeout
-    pub fn get_device_info_with_timeout(
-        &mut self,
-        timeout: Duration,
-    ) -> Result<RplidarResponseDeviceInfo> {
-        if let Some(msg) = self
-            .channel
-            .invoke(&Message::new(RPLIDAR_CMD_GET_DEVICE_INFO), timeout)?
-        {
-            return handle_resp!(RPLIDAR_ANS_TYPE_DEVINFO, msg, RplidarResponseDeviceInfo);
-        }
-
-        Err(RposError::OperationTimeout.into())
-    }
-
-    /// Stop lidar
-    pub fn stop(&mut self) -> Result<()> {
-        self.stop_motor()?;
-        self.channel.write(&Message::new(RPLIDAR_CMD_STOP))?;
-        Ok(())
-    }
-
-    /// Reset RPLIDAR core
-    pub fn core_reset(&mut self) -> Result<()> {
-        self.channel.write(&Message::new(RPLIDAR_CMD_RESET))?;
-        Ok(())
-    }
-
-    /// Set motor PWM (via accessory board)
-    pub fn set_motor_pwm(&mut self, pwm: u16) -> Result<()> {
-        let mut payload = [0; 2];
-        LittleEndian::write_u16(&mut payload, pwm);
-
-        self.channel
-            .write(&Message::with_data(RPLIDAR_CMD_SET_MOTOR_PWM, &payload))?;
-
-        Ok(())
-    }
-
-    /// Stop motor
-    pub fn stop_motor(&mut self) -> Result<()> {
-        self.channel.set_dtr_ready(true)?;
-        self.set_motor_pwm(0)
-    }
-
-    /// Start motor
-    pub fn start_motor(&mut self) -> Result<()> {
-        self.channel.set_dtr_ready(false)?;
-        self.set_motor_pwm(RPLIDAR_DEFAULT_MOTOR_PWM)
-    }
-
-    /*
-    /// Get LIDAR config
-    fn get_lidar_conf(&mut self, config_type: u32) -> Result<Vec<u8>> {
-        self.get_lidar_conf_with_timeout(config_type, RPLIDAR_DEFAULT_TIMEOUT)
-    }
-
-    /// get lidar config with parameter
-    fn get_lidar_conf_with_param(&mut self, config_type: u32, param: &[u8]) -> Result<Vec<u8>> {
-        self.get_lidar_conf_with_param_and_timeout(config_type, param, RPLIDAR_DEFAULT_TIMEOUT)
-    }
-    */
 
     /// get lidar config with timeout
     fn get_lidar_conf_with_timeout(
@@ -275,29 +296,6 @@ where
         } else {
             Err(RposError::OperationTimeout.into())
         }
-    }
-
-    /// get typical scan mode of target LIDAR
-    pub fn get_typical_scan_mode(&mut self) -> Result<u16> {
-        self.get_typical_scan_mode_with_timeout(RPLIDAR_DEFAULT_TIMEOUT)
-    }
-
-    /// get typical scan mode of target LIDAR with timeout
-    pub fn get_typical_scan_mode_with_timeout(&mut self, timeout: Duration) -> Result<u16> {
-        let device_info = self.get_device_info_with_timeout(timeout)?;
-
-        if device_info.firmware_version < RPLIDAR_GET_LIDAR_CONF_START_VERSION {
-            return Ok(if device_info.model >= 0x20u8 {
-                1u16
-            } else {
-                0u16
-            });
-        }
-
-        let scan_mode_data =
-            self.get_lidar_conf_with_timeout(RPLIDAR_CONF_SCAN_MODE_TYPICAL, timeout)?;
-
-        return parse_resp_data!(scan_mode_data, u16);
     }
 
     /// get lidar sample duration
@@ -395,97 +393,6 @@ where
             ans_type: self.get_scan_mode_ans_type_with_timeout(scan_mode, timeout)?,
             name: self.get_scan_mode_name_with_timeout(scan_mode, timeout)?,
         })
-    }
-
-    /// get all supported scan modes supported by the LIDAR
-    pub fn get_all_supported_scan_modes(&mut self) -> Result<Vec<ScanMode>> {
-        self.get_all_supported_scan_modes_with_timeout(RPLIDAR_DEFAULT_TIMEOUT)
-    }
-
-    /// get all supported scan modes supported by the LIDAR with timeout
-    pub fn get_all_supported_scan_modes_with_timeout(
-        &mut self,
-        timeout: Duration,
-    ) -> Result<Vec<ScanMode>> {
-        let device_info = self.get_device_info_with_timeout(timeout)?;
-
-        if device_info.firmware_version < RPLIDAR_GET_LIDAR_CONF_START_VERSION {
-            let mut output: Vec<ScanMode> = Vec::with_capacity(2);
-
-            output.push(ScanMode {
-                id: 0u16,
-                us_per_sample: 1000000f32 / 2000f32,
-                max_distance: 8000f32,
-                ans_type: RPLIDAR_ANS_TYPE_MEASUREMENT,
-                name: "Standard".to_owned(),
-            });
-
-            if device_info.model >= 0x20u8 {
-                output.push(ScanMode {
-                    id: 1u16,
-                    us_per_sample: 1000000f32 / 4000f32,
-                    max_distance: 16000f32,
-                    ans_type: RPLIDAR_ANS_TYPE_MEASUREMENT_CAPSULED,
-                    name: "Express".to_owned(),
-                });
-            }
-
-            Ok(output)
-        } else {
-            let scan_mode_count = self.get_scan_mode_count_with_timeout(timeout)?;
-            let mut output: Vec<ScanMode> = Vec::with_capacity(scan_mode_count as usize);
-
-            for i in 0..scan_mode_count {
-                output.push(self.get_scan_mode_with_timeout(i as u16, timeout)?);
-            }
-
-            Ok(output)
-        }
-    }
-
-    /// start scan
-    pub fn start_scan(&mut self) -> Result<ScanMode> {
-        self.start_scan_with_options(&ScanOptions::default())
-    }
-
-    /// start scan with timeout
-    pub fn start_scan_with_timeout(&mut self, timeout: Duration) -> Result<ScanMode> {
-        self.start_scan_with_options_and_timeout(&ScanOptions::default(), timeout)
-    }
-
-    /// start scan with options
-    pub fn start_scan_with_options(&mut self, options: &ScanOptions) -> Result<ScanMode> {
-        self.start_scan_with_options_and_timeout(options, RPLIDAR_DEFAULT_TIMEOUT)
-    }
-
-    /// start scan with options and non-default timeout
-    pub fn start_scan_with_options_and_timeout(
-        &mut self,
-        options: &ScanOptions,
-        timeout: Duration,
-    ) -> Result<ScanMode> {
-        self.cached_prev_capsule = CachedPrevCapsule::None;
-
-        let scan_mode = match options.scan_mode {
-            Some(mode) => mode,
-            None => self.get_typical_scan_mode_with_timeout(timeout)?,
-        };
-
-        let scan_mode_info = self.get_scan_mode_with_timeout(scan_mode, timeout)?;
-
-        match scan_mode {
-            0 => self.legacy_start_scan(options.force_scan)?,
-            _ => {
-                let payload = RplidarPayloadExpressScan {
-                    work_mode: scan_mode as u8,
-                    work_flags: options.options as u16,
-                    param: 0,
-                };
-                self.start_express_scan(&payload)?;
-            }
-        }
-
-        Ok(scan_mode_info)
     }
 
     /// use legacy command to start scan
@@ -616,14 +523,189 @@ where
             Ok(())
         }
     }
+}
+
+impl<T> RplidarDriver for RplidarDevice<T>
+where
+    T: serialport::SerialPort,
+{
+    /// get device info of the RPLIDAR
+    fn get_device_info(&mut self) -> Result<RplidarResponseDeviceInfo> {
+        self.get_device_info_with_timeout(RPLIDAR_DEFAULT_TIMEOUT)
+    }
+
+    /// get device info of the RPLIDAR with timeout
+    fn get_device_info_with_timeout(
+        &mut self,
+        timeout: Duration,
+    ) -> Result<RplidarResponseDeviceInfo> {
+        if let Some(msg) = self
+            .channel
+            .invoke(&Message::new(RPLIDAR_CMD_GET_DEVICE_INFO), timeout)?
+        {
+            return handle_resp!(RPLIDAR_ANS_TYPE_DEVINFO, msg, RplidarResponseDeviceInfo);
+        }
+
+        Err(RposError::OperationTimeout.into())
+    }
+
+    /// Stop lidar
+    fn stop(&mut self) -> Result<()> {
+        self.stop_motor()?;
+        self.channel.write(&Message::new(RPLIDAR_CMD_STOP))?;
+        Ok(())
+    }
+
+    /// Reset RPLIDAR core
+    fn core_reset(&mut self) -> Result<()> {
+        self.channel.write(&Message::new(RPLIDAR_CMD_RESET))?;
+        Ok(())
+    }
+
+    /// Set motor PWM (via accessory board)
+    fn set_motor_pwm(&mut self, pwm: u16) -> Result<()> {
+        let mut payload = [0; 2];
+        LittleEndian::write_u16(&mut payload, pwm);
+
+        self.channel
+            .write(&Message::with_data(RPLIDAR_CMD_SET_MOTOR_PWM, &payload))?;
+
+        Ok(())
+    }
+
+    /// Stop motor
+    fn stop_motor(&mut self) -> Result<()> {
+        self.channel.set_dtr_ready(true)?;
+        self.set_motor_pwm(0)
+    }
+
+    /// Start motor
+    fn start_motor(&mut self) -> Result<()> {
+        self.channel.set_dtr_ready(false)?;
+        self.set_motor_pwm(RPLIDAR_DEFAULT_MOTOR_PWM)
+    }
+
+    /// get typical scan mode of target LIDAR
+    fn get_typical_scan_mode(&mut self) -> Result<u16> {
+        self.get_typical_scan_mode_with_timeout(RPLIDAR_DEFAULT_TIMEOUT)
+    }
+
+    /// get typical scan mode of target LIDAR with timeout
+    fn get_typical_scan_mode_with_timeout(&mut self, timeout: Duration) -> Result<u16> {
+        let device_info = self.get_device_info_with_timeout(timeout)?;
+
+        if device_info.firmware_version < RPLIDAR_GET_LIDAR_CONF_START_VERSION {
+            return Ok(if device_info.model >= 0x20u8 {
+                1u16
+            } else {
+                0u16
+            });
+        }
+
+        let scan_mode_data =
+            self.get_lidar_conf_with_timeout(RPLIDAR_CONF_SCAN_MODE_TYPICAL, timeout)?;
+
+        return parse_resp_data!(scan_mode_data, u16);
+    }
+
+    /// get all supported scan modes supported by the LIDAR
+    fn get_all_supported_scan_modes(&mut self) -> Result<Vec<ScanMode>> {
+        self.get_all_supported_scan_modes_with_timeout(RPLIDAR_DEFAULT_TIMEOUT)
+    }
+
+    /// get all supported scan modes supported by the LIDAR with timeout
+    fn get_all_supported_scan_modes_with_timeout(
+        &mut self,
+        timeout: Duration,
+    ) -> Result<Vec<ScanMode>> {
+        let device_info = self.get_device_info_with_timeout(timeout)?;
+
+        if device_info.firmware_version < RPLIDAR_GET_LIDAR_CONF_START_VERSION {
+            let mut output: Vec<ScanMode> = Vec::with_capacity(2);
+
+            output.push(ScanMode {
+                id: 0u16,
+                us_per_sample: 1000000f32 / 2000f32,
+                max_distance: 8000f32,
+                ans_type: RPLIDAR_ANS_TYPE_MEASUREMENT,
+                name: "Standard".to_owned(),
+            });
+
+            if device_info.model >= 0x20u8 {
+                output.push(ScanMode {
+                    id: 1u16,
+                    us_per_sample: 1000000f32 / 4000f32,
+                    max_distance: 16000f32,
+                    ans_type: RPLIDAR_ANS_TYPE_MEASUREMENT_CAPSULED,
+                    name: "Express".to_owned(),
+                });
+            }
+
+            Ok(output)
+        } else {
+            let scan_mode_count = self.get_scan_mode_count_with_timeout(timeout)?;
+            let mut output: Vec<ScanMode> = Vec::with_capacity(scan_mode_count as usize);
+
+            for i in 0..scan_mode_count {
+                output.push(self.get_scan_mode_with_timeout(i as u16, timeout)?);
+            }
+
+            Ok(output)
+        }
+    }
+
+    /// start scan
+    fn start_scan(&mut self) -> Result<ScanMode> {
+        self.start_scan_with_options(&ScanOptions::default())
+    }
+
+    /// start scan with timeout
+    fn start_scan_with_timeout(&mut self, timeout: Duration) -> Result<ScanMode> {
+        self.start_scan_with_options_and_timeout(&ScanOptions::default(), timeout)
+    }
+
+    /// start scan with options
+    fn start_scan_with_options(&mut self, options: &ScanOptions) -> Result<ScanMode> {
+        self.start_scan_with_options_and_timeout(options, RPLIDAR_DEFAULT_TIMEOUT)
+    }
+
+    /// start scan with options and non-default timeout
+    fn start_scan_with_options_and_timeout(
+        &mut self,
+        options: &ScanOptions,
+        timeout: Duration,
+    ) -> Result<ScanMode> {
+        self.cached_prev_capsule = CachedPrevCapsule::None;
+
+        let scan_mode = match options.scan_mode {
+            Some(mode) => mode,
+            None => self.get_typical_scan_mode_with_timeout(timeout)?,
+        };
+
+        let scan_mode_info = self.get_scan_mode_with_timeout(scan_mode, timeout)?;
+
+        match scan_mode {
+            0 => self.legacy_start_scan(options.force_scan)?,
+            _ => {
+                let payload = RplidarPayloadExpressScan {
+                    work_mode: scan_mode as u8,
+                    work_flags: options.options as u16,
+                    param: 0,
+                };
+                self.start_express_scan(&payload)?;
+            }
+        }
+
+        Ok(scan_mode_info)
+    }
 
     /// read scan point
-    pub fn grab_scan_point(&mut self) -> Result<ScanPoint> {
+    fn grab_scan_point(&mut self) -> Result<ScanPoint> {
         self.grab_scan_point_with_timeout(RPLIDAR_DEFAULT_TIMEOUT)
     }
 
     /// read scan point with timeout
-    pub fn grab_scan_point_with_timeout(&mut self, timeout: Duration) -> Result<ScanPoint> {
+    fn grab_scan_point_with_timeout(&mut self, timeout: Duration) -> Result<ScanPoint> {
         if self.cached_measurement_nodes.is_empty() {
             self.wait_scan_data_with_timeout(timeout)?;
 
@@ -636,12 +718,12 @@ where
     }
 
     /// read scan frame
-    pub fn grab_scan(&mut self) -> Result<Vec<ScanPoint>> {
+    fn grab_scan(&mut self) -> Result<Vec<ScanPoint>> {
         self.grab_scan_with_timeout(RPLIDAR_DEFAULT_TIMEOUT * 5)
     }
 
     /// read scan frame
-    pub fn grab_scan_with_timeout(&mut self, timeout: Duration) -> Result<Vec<ScanPoint>> {
+    fn grab_scan_with_timeout(&mut self, timeout: Duration) -> Result<Vec<ScanPoint>> {
         let deadline = Instant::now() + timeout;
         let mut end = 1;
 
@@ -679,12 +761,12 @@ where
     }
 
     /// Get LIDAR health information
-    pub fn get_device_health(&mut self) -> Result<Health> {
+    fn get_device_health(&mut self) -> Result<Health> {
         self.get_device_health_with_timeout(RPLIDAR_DEFAULT_TIMEOUT)
     }
 
     /// Get LIDAR health information
-    pub fn get_device_health_with_timeout(&mut self, timeout: Duration) -> Result<Health> {
+    fn get_device_health_with_timeout(&mut self, timeout: Duration) -> Result<Health> {
         if let Some(msg) = self
             .channel
             .invoke(&Message::new(RPLIDAR_CMD_GET_DEVICE_HEALTH), timeout)?
@@ -703,12 +785,12 @@ where
     }
 
     /// Check if the connected LIDAR supports motor control
-    pub fn check_motor_ctrl_support(&mut self) -> Result<bool> {
+    fn check_motor_ctrl_support(&mut self) -> Result<bool> {
         self.check_motor_ctrl_support_with_timeout(RPLIDAR_DEFAULT_TIMEOUT)
     }
 
     /// Check if the connected LIDAR supports motor control with timeout
-    pub fn check_motor_ctrl_support_with_timeout(&mut self, timeout: Duration) -> Result<bool> {
+    fn check_motor_ctrl_support_with_timeout(&mut self, timeout: Duration) -> Result<bool> {
         let mut data = [0u8; 4];
         LittleEndian::write_u32(&mut data, 0u32);
 
