@@ -8,7 +8,7 @@ keywords = ["Slamtec", "Rplidar", "Driver"]
 authors = ["Tony Huang <tony@slamtec.com>"]
 edition = "2018"
 documentation = "https://docs.rs/rplidar_drv"
-exclude = [".gitignore", ".travis.yml", ".cargo/config"]
+exclude = [".gitignored", ".travis.yml", ".cargo/config"]
 
 [badges]
 travis-ci = { repository = "cnwzhjs/rplidar.rs", branch = "master" }
@@ -28,6 +28,11 @@ serialport = { version = "4.0", default-features = false }
 members = [
     ".",
     "rpos_drv",
-    "examples/ultra_simple",
-    "examples/kiss_demo"
 ]
+
+[dev-dependencies]
+hex-slice = "0.1.4"
+kiss3d = "0.31"
+nalgebra = "0.27"
+serialport = { version = "4.0", default-features = false }
+plotters = "0.3.1"
