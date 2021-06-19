@@ -4,8 +4,6 @@
 //!
 //! `rpos_drv` is a collection of structs and traits to build drivers for RPOS.
 
-extern crate failure;
-
 mod channel;
 mod errors;
 mod prelude;

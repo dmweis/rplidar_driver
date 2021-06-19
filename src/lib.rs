@@ -1,9 +1,6 @@
 //! # Rplidar Driver
 //!
-//! `rplidar_drv` is driver for Slamtec Rplidar series
-
-extern crate byteorder;
-extern crate crc;
+//! `rplidar_driver` is driver for Slamtec Rplidar A1 lidar
 
 mod answers;
 mod capsuled_parser;
@@ -475,33 +472,6 @@ where
         };
 
         let scan_mode_info = self.get_scan_mode_with_timeout(scan_mode, timeout)?;
-        // TODO (David): What is this? The function above doesn't timeout for me
-        // let scan_mode_info = match scan_mode {
-        //     0 => ScanMode {
-        //         id: 0,
-        //         us_per_sample: 1000000f32 / 2000f32,
-        //         max_distance: 8000f32,
-        //         ans_type: RPLIDAR_ANS_TYPE_MEASUREMENT,
-        //         name: "Standard".to_owned(),
-        //     },
-        //     1 => ScanMode {
-        //         id: 1,
-        //         us_per_sample: 1000000f32 / 4000f32,
-        //         max_distance: 16000f32,
-        //         ans_type: RPLIDAR_ANS_TYPE_MEASUREMENT_CAPSULED,
-        //         name: "Express".to_owned(),
-        //     },
-        //     _ => {
-        //         println!("RPLIDAR.RS WARNING: idk what that scan mode is, you proabbly need to fix the code yourself :(");
-        //         ScanMode {
-        //             id: 1,
-        //             us_per_sample: 1000000f32 / 4000f32,
-        //             max_distance: 16000f32,
-        //             ans_type: RPLIDAR_ANS_TYPE_MEASUREMENT_CAPSULED,
-        //             name: "Express".to_owned(),
-        //         }
-        //     }
-        // };
 
         match scan_mode {
             0 => self.legacy_start_scan(options.force_scan)?,

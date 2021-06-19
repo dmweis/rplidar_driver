@@ -1,20 +1,15 @@
 [package]
-name = "rplidar_drv"
-description = "Driver for Slamtec RPLIDAR series laser sensors"
-version = "0.6.0"
+name = "rplidar_driver"
+description = "Driver for Slamtec RPLIDAR A1 lidar"
+version = "0.1.0"
 license = "BSD-2-Clause"
-repository = "https://github.com/cnwzhjs/rplidar.rs"
+repository = "https://github.com/dmweis/rplidar_driver"
 keywords = ["Slamtec", "Rplidar", "Driver"]
-authors = ["Tony Huang <tony@slamtec.com>"]
+authors = ["David Michael Weis <dweis7@gmail.com>"]
 edition = "2018"
-documentation = "https://docs.rs/rplidar_drv"
-exclude = [".gitignored", ".travis.yml", ".cargo/config"]
-
-[badges]
-travis-ci = { repository = "cnwzhjs/rplidar.rs", branch = "master" }
 
 [lib]
-name = "rplidar_drv"
+name = "rplidar_driver"
 path = "src/lib.rs"
 
 [dependencies]

@@ -1,11 +1,8 @@
-extern crate hex_slice;
-extern crate rplidar_drv;
-
 use hex_slice::AsHex;
-use rplidar_drv::rpos_drv::RposError;
-use rplidar_drv::utils::sort_scan;
-use rplidar_drv::ScanOptions;
-use rplidar_drv::{Health, RplidarDevice};
+use rplidar_driver::rpos_drv::RposError;
+use rplidar_driver::utils::sort_scan;
+use rplidar_driver::ScanOptions;
+use rplidar_driver::{Health, RplidarDevice};
 use std::time::{Duration, Instant};
 
 use std::env;
