@@ -1,15 +1,14 @@
 extern crate hex_slice;
 extern crate rplidar_drv;
-extern crate rpos_drv;
 
 use hex_slice::AsHex;
 use kiss3d::light::Light;
 use kiss3d::nalgebra::Point3;
 use kiss3d::window::Window;
+use rplidar_drv::rpos_drv::RposError;
 use rplidar_drv::utils::sort_scan;
 use rplidar_drv::ScanOptions;
 use rplidar_drv::{Health, RplidarDevice};
-use rpos_drv::RposError;
 use std::env;
 
 fn main() {

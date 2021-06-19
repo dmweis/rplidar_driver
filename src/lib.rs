@@ -4,7 +4,6 @@
 
 extern crate byteorder;
 extern crate crc;
-extern crate rpos_drv;
 
 mod answers;
 mod capsuled_parser;
@@ -14,6 +13,7 @@ mod errors;
 mod internals;
 mod prelude;
 mod protocol;
+pub mod rpos_drv;
 mod ultra_capsuled_parser;
 pub mod utils;
 
@@ -29,9 +29,9 @@ use self::cmds::*;
 use self::internals::*;
 pub use self::protocol::RplidarHostProtocol;
 use self::ultra_capsuled_parser::parse_ultra_capsuled;
+use crate::rpos_drv::{Channel, Message, Result};
 use byteorder::{ByteOrder, LittleEndian};
 use crc::crc32;
-use rpos_drv::{Channel, Message, Result};
 #[cfg(windows)]
 use serialport::COMPort;
 use serialport::SerialPort;

@@ -7,7 +7,7 @@ use std::io::{Read, Write};
 ///
 /// ```rust
 /// # use std::io::Write;
-/// let mut buffer = rpos_drv::RingByteBuffer::with_capacity(100);
+/// let mut buffer = rplidar_drv::rpos_drv::RingByteBuffer::with_capacity(100);
 /// buffer.write(&[0, 1, 2, 3]).unwrap();
 /// assert_eq!(buffer.len(), 4 as usize);
 /// ```
@@ -57,7 +57,7 @@ impl RingByteBuffer {
     /// # Example
     /// ```rust
     /// # use std::io::{ stdout, Write };
-    /// # let mut buffer = rpos_drv::RingByteBuffer::with_capacity(100);
+    /// # let mut buffer = rplidar_drv::rpos_drv::RingByteBuffer::with_capacity(100);
     /// # let mut some_stream = stdout();
     /// let read_slice = buffer.current_read_slice();
     /// let read = some_stream.write(read_slice).unwrap();
@@ -114,7 +114,7 @@ impl RingByteBuffer {
     /// # Example
     /// ```rust
     /// # use std::io::{ stdin, Read };
-    /// # let mut buffer = rpos_drv::RingByteBuffer::with_capacity(100);
+    /// # let mut buffer = rplidar_drv::rpos_drv::RingByteBuffer::with_capacity(100);
     /// # let mut some_stream = stdin();
     /// let read = buffer.read_from(&mut some_stream).unwrap();
     /// println!("{} bytes read from stream to fill buffer, current length of buffer is: {}", read, buffer.len());
