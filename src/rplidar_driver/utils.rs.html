@@ -96,8 +96,6 @@
 <span id="93">93</span>
 <span id="94">94</span>
 <span id="95">95</span>
-<span id="96">96</span>
-<span id="97">97</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="kw">super</span><span class="ident">::errors</span>::<span class="kw-2">*</span>;
 <span class="kw">use</span> <span class="kw">super</span><span class="ident">::prelude</span>::<span class="kw-2">*</span>;
@@ -145,8 +143,7 @@
     } <span class="kw">else</span> {
         <span class="prelude-val">Err</span>(<span class="ident">RposError::OperationFail</span> {
             <span class="ident">description</span>: <span class="string">&quot;operation failed&quot;</span>.<span class="ident">to_owned</span>(),
-        }
-        .<span class="ident">into</span>())
+        })
     }
 }
 
@@ -164,8 +161,7 @@
     } <span class="kw">else</span> {
         <span class="prelude-val">Err</span>(<span class="ident">RposError::OperationFail</span> {
             <span class="ident">description</span>: <span class="string">&quot;operation failed&quot;</span>.<span class="ident">to_owned</span>(),
-        }
-        .<span class="ident">into</span>())
+        })
     }
 }
 

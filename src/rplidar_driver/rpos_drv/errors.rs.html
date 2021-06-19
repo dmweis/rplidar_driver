@@ -27,33 +27,47 @@
 <span id="24">24</span>
 <span id="25">25</span>
 <span id="26">26</span>
+<span id="27">27</span>
+<span id="28">28</span>
+<span id="29">29</span>
+<span id="30">30</span>
+<span id="31">31</span>
+<span id="32">32</span>
+<span id="33">33</span>
 </pre><div class="example-wrap"><pre class="rust ">
-<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">failure</span>::{<span class="ident">Error</span>, <span class="ident">Fail</span>};
+<span class="kw">use</span> <span class="ident">std::io</span>;
+<span class="kw">use</span> <span class="ident">thiserror::Error</span>;
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Fail</span>, <span class="ident">Debug</span>)]</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Error</span>, <span class="ident">Debug</span>)]</span>
 <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">RposError</span> {
     <span class="doccomment">/// The execution of operation failed</span>
-    <span class="attribute">#[<span class="ident">fail</span>(<span class="ident">display</span> <span class="op">=</span> <span class="string">&quot;operation failed: {}&quot;</span>, <span class="ident">description</span>)]</span>
+    <span class="attribute">#[<span class="ident">error</span>(<span class="string">&quot;operation failed: {}&quot;</span>, <span class="ident">description</span>)]</span>
     <span class="ident">OperationFail</span> { <span class="ident">description</span>: <span class="ident">String</span> },
 
     <span class="doccomment">/// The execution of operation is timed out</span>
-    <span class="attribute">#[<span class="ident">fail</span>(<span class="ident">display</span> <span class="op">=</span> <span class="string">&quot;operation timeout&quot;</span>)]</span>
+    <span class="attribute">#[<span class="ident">error</span>(<span class="string">&quot;operation timeout&quot;</span>)]</span>
     <span class="ident">OperationTimeout</span>,
 
     <span class="doccomment">/// The device doesn&#39;t support this operation</span>
-    <span class="attribute">#[<span class="ident">fail</span>(<span class="ident">display</span> <span class="op">=</span> <span class="string">&quot;operation not support&quot;</span>)]</span>
+    <span class="attribute">#[<span class="ident">error</span>(<span class="string">&quot;operation not support&quot;</span>)]</span>
     <span class="ident">OperationNotSupport</span>,
 
     <span class="doccomment">/// The decoding data is invalid according to current protocol</span>
-    <span class="attribute">#[<span class="ident">fail</span>(<span class="ident">display</span> <span class="op">=</span> <span class="string">&quot;protocol error: {}&quot;</span>, <span class="ident">description</span>)]</span>
+    <span class="attribute">#[<span class="ident">error</span>(<span class="string">&quot;protocol error: {}&quot;</span>, <span class="ident">description</span>)]</span>
     <span class="ident">ProtocolError</span> { <span class="ident">description</span>: <span class="ident">String</span> },
 
     <span class="doccomment">/// The buffer is too small for message encoding</span>
-    <span class="attribute">#[<span class="ident">fail</span>(<span class="ident">display</span> <span class="op">=</span> <span class="string">&quot;buffer is too small for message encoding&quot;</span>)]</span>
+    <span class="attribute">#[<span class="ident">error</span>(<span class="string">&quot;buffer is too small for message encoding&quot;</span>)]</span>
     <span class="ident">BufferTooSmall</span>,
+
+    <span class="attribute">#[<span class="ident">error</span>(<span class="string">&quot;Io error&quot;</span>)]</span>
+    <span class="ident">IoError</span>(<span class="attribute">#[<span class="ident">from</span>]</span> <span class="ident">io::Error</span>),
+
+    <span class="attribute">#[<span class="ident">error</span>(<span class="string">&quot;Serial port error&quot;</span>)]</span>
+    <span class="ident">SerialPortError</span>(<span class="attribute">#[<span class="ident">from</span>]</span> <span class="ident">serialport::Error</span>),
 }
 
-<span class="kw">pub</span> <span class="kw">type</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">std::result::Result</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">Error</span><span class="op">&gt;</span>;
+<span class="kw">pub</span> <span class="kw">type</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">std::result::Result</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">RposError</span><span class="op">&gt;</span>;
 </pre></div>
 </section><section id="search" class="content hidden"></section><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="rplidar_driver" data-search-index-js="../../../search-index.js" data-search-js="../../../search.js"></div>
     <script src="../../../main.js"></script><script src="../../../source-script.js"></script><script src="../../../source-files.js"></script></body></html>
