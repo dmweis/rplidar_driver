@@ -1,6 +1,7 @@
 # Rust driver for RPlidar A1
 
 [![Rust](https://github.com/dmweis/rplidar_driver/actions/workflows/general.yml/badge.svg)](https://github.com/dmweis/rplidar_driver/actions/workflows/general.yml)
+[![Rust-windows](https://github.com/dmweis/rplidar_driver/actions/workflows/general-windows.yml/badge.svg)](https://github.com/dmweis/rplidar_driver/actions/workflows/general-windows.yml)
 [![codecov](https://codecov.io/gh/dmweis/rplidar_driver/branch/main/graph/badge.svg)](https://codecov.io/gh/dmweis/rplidar_driver)
 [![Private docs](https://github.com/dmweis/rplidar_driver/workflows/Deploy%20Docs%20to%20GitHub%20Pages/badge.svg)](https://davidweis.dev/rplidar_driver/rplidar_driver/index.html)
 
