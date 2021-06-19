@@ -1,15 +1,12 @@
 extern crate hex_slice;
 extern crate rplidar_drv;
 extern crate rpos_drv;
-extern crate serialport;
 
 use hex_slice::AsHex;
-
 use rplidar_drv::utils::sort_scan;
 use rplidar_drv::ScanOptions;
-use rplidar_drv::{Health, RplidarDevice, RplidarHostProtocol};
-use rpos_drv::{Channel, RposError};
-use serialport::prelude::*;
+use rplidar_drv::{Health, RplidarDevice};
+use rpos_drv::RposError;
 use std::time::{Duration, Instant};
 
 use std::env;
@@ -20,37 +17,13 @@ fn main() {
     let args: Vec<String> = env::args().collect();
 
     if args.len() < 2 || args.len() > 3 {
-        println!("Usage: {} <serial_port> [baudrate]", args[0]);
-        println!("    baudrate defaults to 115200");
+        println!("Usage: {} <serial_port>", args[0]);
         return;
     }
 
     let serial_port = &args[1];
-    let baud_rate = args
-        .get(2)
-        .unwrap_or(&String::from("115200"))
-        .parse::<u32>()
-        .expect("Invalid value for baudrate");
 
-    let s = SerialPortSettings {
-        baud_rate,
-        data_bits: DataBits::Eight,
-        flow_control: FlowControl::None,
-        parity: Parity::None,
-        stop_bits: StopBits::One,
-        timeout: Duration::from_millis(1),
-    };
-
-    let mut serial_port =
-        serialport::open_with_settings(serial_port, &s).expect("failed to open serial port");
-
-    serial_port
-        .write_data_terminal_ready(false)
-        .expect("failed to clear DTR");
-
-    let channel = Channel::new(RplidarHostProtocol::new(), serial_port);
-
-    let mut rplidar = RplidarDevice::new(channel);
+    let mut rplidar = RplidarDevice::open_port(&serial_port).unwrap();
 
     let device_info = rplidar
         .get_device_info()

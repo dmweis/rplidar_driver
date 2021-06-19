@@ -7,7 +7,7 @@ edition = "2018"
 [dependencies]
 rplidar_drv = { path = "../.." }
 rpos_drv = { path = "../../rpos_drv" }
-serialport = { version = "3.1.0", default-features = false, features = [] }
 hex-slice = "0.1.4"
 kiss3d = "0.31"
 nalgebra = "0.27"
+serialport = { version = "4.0", default-features = false }

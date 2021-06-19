@@ -1,58 +1,28 @@
 extern crate hex_slice;
 extern crate rplidar_drv;
 extern crate rpos_drv;
-extern crate serialport;
 
 use hex_slice::AsHex;
-
 use kiss3d::light::Light;
 use kiss3d::nalgebra::Point3;
 use kiss3d::window::Window;
 use rplidar_drv::utils::sort_scan;
 use rplidar_drv::ScanOptions;
-use rplidar_drv::{Health, RplidarDevice, RplidarHostProtocol};
-use rpos_drv::{Channel, RposError};
-use serialport::prelude::*;
-use std::thread::sleep;
-use std::time::Duration;
-
+use rplidar_drv::{Health, RplidarDevice};
+use rpos_drv::RposError;
 use std::env;
 
 fn main() {
     let args: Vec<String> = env::args().collect();
 
     if args.len() < 2 || args.len() > 3 {
-        println!("Usage: {} <serial_port> [baudrate]", args[0]);
-        println!("    baudrate defaults to 115200");
+        println!("Usage: {} <serial_port> ", args[0]);
         return;
     }
 
     let port_name = &args[1];
-    let baud_rate = args
-        .get(2)
-        .unwrap_or(&String::from("115200"))
-        .parse::<u32>()
-        .expect("Invalid value for baudrate");
 
-    let s = SerialPortSettings {
-        baud_rate,
-        data_bits: DataBits::Eight,
-        flow_control: FlowControl::None,
-        parity: Parity::None,
-        stop_bits: StopBits::One,
-        timeout: Duration::from_millis(1),
-    };
-
-    let mut serial_port =
-        serialport::open_with_settings(port_name, &s).expect("failed to open serial port");
-
-    serial_port
-        .write_data_terminal_ready(false)
-        .expect("failed to clear DTR");
-
-    let channel = Channel::new(RplidarHostProtocol::new(), serial_port);
-
-    let mut rplidar = RplidarDevice::new(channel);
+    let mut rplidar = RplidarDevice::open_port(&port_name).unwrap();
 
     let device_info = rplidar
         .get_device_info()
@@ -177,15 +147,6 @@ fn main() {
                 if !window.render() {
                     break;
                 }
-                // for scan_point in scan {
-                //     println!(
-                //         "    Angle: {:5.2}, Distance: {:8.4}, Valid: {:5}, Sync: {:5}",
-                //         scan_point.angle().to_degrees(),
-                //         scan_point.distance(),
-                //         scan_point.is_valid(),
-                //         scan_point.is_sync()
-                //     )
-                // }
             }
             Err(err) => {
                 if let Some(RposError::OperationTimeout) = err.downcast_ref::<RposError>() {
@@ -198,17 +159,8 @@ fn main() {
         }
     }
 
-    println!("HI");
+    drop(window);
     rplidar.stop_motor().unwrap();
-    sleep(Duration::from_secs(4));
-    drop(rplidar);
-
-    // lmao. This is one way to stop the motors
-
-    let mut serial_port =
-        serialport::open_with_settings(port_name, &s).expect("failed to open serial port");
-
-    serial_port
-        .write_data_terminal_ready(true)
-        .expect("failed to clear DTR");
+    println!("Lidar stopped\nPress enter to exit...");
+    std::io::stdin().read_line(&mut String::new()).unwrap();
 }

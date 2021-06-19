@@ -21,6 +21,8 @@ path = "src/lib.rs"
 rpos_drv = { path = "rpos_drv", version = "0.2.0" }
 byteorder = "1.2.7"
 crc = "1.8.1"
+serialport = { version = "4.0", default-features = false }
+
 
 [workspace]
 members = [

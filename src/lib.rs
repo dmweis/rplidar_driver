@@ -32,15 +32,21 @@ use self::ultra_capsuled_parser::parse_ultra_capsuled;
 use byteorder::{ByteOrder, LittleEndian};
 use crc::crc32;
 use rpos_drv::{Channel, Message, Result};
+#[cfg(windows)]
+use serialport::COMPort;
+use serialport::SerialPort;
+#[cfg(unix)]
+use serialport::TTYPort;
 use std::collections::VecDeque;
-use std::io::{Read, Write};
 use std::mem::transmute_copy;
 use std::time::{Duration, Instant};
 
 const RPLIDAR_GET_LIDAR_CONF_START_VERSION: u16 = ((1 << 8) | (24)) as u16;
 
+const A1_DEFAULT_BAUDRATE: u32 = 115200;
+
 /// Rplidar device driver
-pub struct RplidarDevice<T> {
+pub struct RplidarDevice<T: SerialPort> {
     channel: Channel<RplidarHostProtocol, T>,
     cached_measurement_nodes: VecDeque<ScanPoint>,
     cached_prev_capsule: CachedPrevCapsule,
@@ -91,9 +97,49 @@ impl From<RplidarResponseMeasurementNodeHq> for ScanPoint {
     }
 }
 
+#[cfg(unix)]
+impl RplidarDevice<TTYPort> {
+    /// Construct a new RplidarDevice from a serial port address
+    ///
+    pub fn open_port(port_name: &str) -> Result<Self> {
+        let mut port = serialport::new(port_name, A1_DEFAULT_BAUDRATE)
+            .timeout(Duration::from_millis(1))
+            .open_native()?;
+
+        port.write_data_terminal_ready(false)?;
+        // Ok(RplidarDevice::with_stream(port))
+        let channel = rpos_drv::Channel::new(RplidarHostProtocol::new(), port);
+        Ok(RplidarDevice {
+            channel,
+            cached_measurement_nodes: VecDeque::with_capacity(RPLIDAR_DEFAULT_CACHE_DEPTH),
+            cached_prev_capsule: CachedPrevCapsule::None,
+        })
+    }
+}
+
+#[cfg(windows)]
+impl RplidarDevice<COMPort> {
+    /// Construct a new RplidarDevice from a serial port address
+    ///
+    pub fn open_port(port_name: &str) -> Result<Self> {
+        let mut port = serialport::new(port_name, A1_DEFAULT_BAUDRATE)
+            .timeout(Duration::from_millis(1))
+            .open_native()?;
+
+        port.write_data_terminal_ready(false)?;
+        // Ok(RplidarDevice::with_stream(port))
+        let channel = rpos_drv::Channel::new(RplidarHostProtocol::new(), port);
+        Ok(RplidarDevice {
+            channel,
+            cached_measurement_nodes: VecDeque::with_capacity(RPLIDAR_DEFAULT_CACHE_DEPTH),
+            cached_prev_capsule: CachedPrevCapsule::None,
+        })
+    }
+}
+
 impl<T> RplidarDevice<T>
 where
-    T: Read + Write,
+    T: SerialPort,
 {
     /// Construct a new RplidarDevice with channel
     ///
@@ -103,7 +149,7 @@ where
     /// let channel = Channel::new(RplidarHostProtocol::new(), serial_port);
     /// let rplidar_device = RplidarDevice::new(channel);
     /// ```
-    pub fn new(channel: Channel<RplidarHostProtocol, T>) -> RplidarDevice<T> {
+    pub fn new(channel: Channel<RplidarHostProtocol, T>) -> Self {
         RplidarDevice {
             channel,
             cached_measurement_nodes: VecDeque::with_capacity(RPLIDAR_DEFAULT_CACHE_DEPTH),
@@ -118,8 +164,8 @@ where
     /// let mut serial_port = serialport::open(serial_port_name)?;
     /// let rplidar_device = RplidarDevice::with_stream(serial_port);
     /// ```
-    pub fn with_stream(stream: T) -> RplidarDevice<T> {
-        RplidarDevice::<T>::new(rpos_drv::Channel::new(RplidarHostProtocol::new(), stream))
+    pub fn with_stream(port: T) -> Self {
+        RplidarDevice::new(rpos_drv::Channel::new(RplidarHostProtocol::new(), port))
     }
 
     /// get device info of the RPLIDAR
@@ -144,6 +190,7 @@ where
 
     /// Stop lidar
     pub fn stop(&mut self) -> Result<()> {
+        self.stop_motor()?;
         self.channel.write(&Message::new(RPLIDAR_CMD_STOP))?;
         Ok(())
     }
@@ -167,11 +214,13 @@ where
 
     /// Stop motor
     pub fn stop_motor(&mut self) -> Result<()> {
+        self.channel.set_dtr_ready(true)?;
         self.set_motor_pwm(0)
     }
 
     /// Start motor
     pub fn start_motor(&mut self) -> Result<()> {
+        self.channel.set_dtr_ready(false)?;
         self.set_motor_pwm(RPLIDAR_DEFAULT_MOTOR_PWM)
     }
 
@@ -708,6 +757,15 @@ where
         } else {
             Err(RposError::OperationTimeout.into())
         }
+    }
+}
+
+impl<T: SerialPort> Drop for RplidarDevice<T> {
+    fn drop(&mut self) {
+        // reason we could be dropping the lidar is
+        // that it got disconnected. In that case we don't care
+        // about failures to write to it
+        let _ = self.stop_motor().is_ok();
     }
 }
 

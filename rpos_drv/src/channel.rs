@@ -1,6 +1,7 @@
+use serialport::SerialPort;
+
 use super::prelude::*;
 use super::ring_byte_buffer::RingByteBuffer;
-use std::io;
 use std::time::{Duration, Instant};
 
 const DEFAULT_CHANNEL_READ_BUFFER_SIZE: usize = 1024;
@@ -16,17 +17,16 @@ const DEFAULT_CHANNEL_READ_BUFFER_SIZE: usize = 1024;
 ///
 /// channel.write(&Message::new(1)).unwrap();
 /// ```
-#[derive(Debug)]
 pub struct Channel<P, T> {
     protocol: P,
-    stream: T,
+    port: T,
     read_buffer: RingByteBuffer,
 }
 
 impl<P, T> Channel<P, T>
 where
     P: ProtocolDecoder + ProtocolEncoder,
-    T: io::Read + io::Write,
+    T: SerialPort,
 {
     /// Create a new `Channel` to read and write messages
     ///
@@ -37,8 +37,8 @@ where
     ///     serial_port
     /// );
     /// ```
-    pub fn new(protocol: P, stream: T) -> Channel<P, T> {
-        Channel::with_read_buffer_size(protocol, stream, DEFAULT_CHANNEL_READ_BUFFER_SIZE)
+    pub fn new(protocol: P, port: T) -> Self {
+        Channel::with_read_buffer_size(protocol, port, DEFAULT_CHANNEL_READ_BUFFER_SIZE)
     }
 
     /// Create a new `Channel` with non-default ring buffer capacity
@@ -51,10 +51,10 @@ where
     ///     100000 as usize
     /// );
     /// ```
-    pub fn with_read_buffer_size(protocol: P, stream: T, read_buffer_size: usize) -> Channel<P, T> {
+    pub fn with_read_buffer_size(protocol: P, port: T, read_buffer_size: usize) -> Self {
         let mut chn = Channel {
             protocol,
-            stream,
+            port,
             read_buffer: RingByteBuffer::with_capacity(read_buffer_size),
         };
 
@@ -65,12 +65,7 @@ where
 
     /// Reset the channel status
     /// This function is usually used to reset protocol encoder and decoder when meet communication error
-    ///
-    /// # Example
-    /// ```ignore
-    /// match channel.invoke(&Message::new(1), Duration::from_secs(1)) {
-    ///     Ok(_) => {},
-    ///     Err(_) => { channel.reset(); }
+    ///Dennis Ritchiereset(); }
     /// }
     /// ```
     pub fn reset(&mut self) {
@@ -88,7 +83,7 @@ where
     /// ```
     pub fn read(&mut self) -> Result<Option<Message>> {
         loop {
-            self.read_buffer.read_from(&mut self.stream)?;
+            self.read_buffer.read_from(&mut self.port)?;
 
             let (decoded, msg) = self
                 .protocol
@@ -130,8 +125,8 @@ where
     /// channel.write(&Message::new(1)).unwrap();
     /// ```
     pub fn write(&mut self, msg: &Message) -> Result<usize> {
-        let written = self.protocol.write_to(msg, &mut self.stream)?;
-        self.stream.flush()?;
+        let written = self.protocol.write_to(msg, &mut self.port)?;
+        self.port.flush()?;
         Ok(written)
     }
 
@@ -144,5 +139,12 @@ where
     pub fn invoke(&mut self, request: &Message, timeout: Duration) -> Result<Option<Message>> {
         self.write(request)?;
         self.read_until(timeout)
+    }
+
+    /// Set data terminal ready on port
+    ///
+    /// Useful for stopping motors on the RPlidar R1
+    pub fn set_dtr_ready(&mut self, level: bool) -> Result<()> {
+        Ok(self.port.write_data_terminal_ready(level)?)
     }
 }
