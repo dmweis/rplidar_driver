@@ -805,6 +805,88 @@
 <span id="802">802</span>
 <span id="803">803</span>
 <span id="804">804</span>
+<span id="805">805</span>
+<span id="806">806</span>
+<span id="807">807</span>
+<span id="808">808</span>
+<span id="809">809</span>
+<span id="810">810</span>
+<span id="811">811</span>
+<span id="812">812</span>
+<span id="813">813</span>
+<span id="814">814</span>
+<span id="815">815</span>
+<span id="816">816</span>
+<span id="817">817</span>
+<span id="818">818</span>
+<span id="819">819</span>
+<span id="820">820</span>
+<span id="821">821</span>
+<span id="822">822</span>
+<span id="823">823</span>
+<span id="824">824</span>
+<span id="825">825</span>
+<span id="826">826</span>
+<span id="827">827</span>
+<span id="828">828</span>
+<span id="829">829</span>
+<span id="830">830</span>
+<span id="831">831</span>
+<span id="832">832</span>
+<span id="833">833</span>
+<span id="834">834</span>
+<span id="835">835</span>
+<span id="836">836</span>
+<span id="837">837</span>
+<span id="838">838</span>
+<span id="839">839</span>
+<span id="840">840</span>
+<span id="841">841</span>
+<span id="842">842</span>
+<span id="843">843</span>
+<span id="844">844</span>
+<span id="845">845</span>
+<span id="846">846</span>
+<span id="847">847</span>
+<span id="848">848</span>
+<span id="849">849</span>
+<span id="850">850</span>
+<span id="851">851</span>
+<span id="852">852</span>
+<span id="853">853</span>
+<span id="854">854</span>
+<span id="855">855</span>
+<span id="856">856</span>
+<span id="857">857</span>
+<span id="858">858</span>
+<span id="859">859</span>
+<span id="860">860</span>
+<span id="861">861</span>
+<span id="862">862</span>
+<span id="863">863</span>
+<span id="864">864</span>
+<span id="865">865</span>
+<span id="866">866</span>
+<span id="867">867</span>
+<span id="868">868</span>
+<span id="869">869</span>
+<span id="870">870</span>
+<span id="871">871</span>
+<span id="872">872</span>
+<span id="873">873</span>
+<span id="874">874</span>
+<span id="875">875</span>
+<span id="876">876</span>
+<span id="877">877</span>
+<span id="878">878</span>
+<span id="879">879</span>
+<span id="880">880</span>
+<span id="881">881</span>
+<span id="882">882</span>
+<span id="883">883</span>
+<span id="884">884</span>
+<span id="885">885</span>
+<span id="886">886</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="doccomment">//! # Rplidar Driver</span>
 <span class="doccomment">//!</span>
@@ -902,17 +984,96 @@
     }
 }
 
+<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">RplidarDriver</span> {
+    <span class="kw">fn</span> <span class="ident">get_device_info</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">RplidarResponseDeviceInfo</span><span class="op">&gt;</span>;
+
+    <span class="doccomment">/// get device info of the RPLIDAR with timeout</span>
+    <span class="kw">fn</span> <span class="ident">get_device_info_with_timeout</span>(
+        <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>,
+        <span class="ident">timeout</span>: <span class="ident">Duration</span>,
+    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">RplidarResponseDeviceInfo</span><span class="op">&gt;</span>;
+
+    <span class="doccomment">/// Stop lidar</span>
+    <span class="kw">fn</span> <span class="ident">stop</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span>;
+
+    <span class="doccomment">/// Reset RPLIDAR core</span>
+    <span class="kw">fn</span> <span class="ident">core_reset</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span>;
+
+    <span class="doccomment">/// Set motor PWM (via accessory board)</span>
+    <span class="kw">fn</span> <span class="ident">set_motor_pwm</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">pwm</span>: <span class="ident">u16</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span>;
+
+    <span class="doccomment">/// Stop motor</span>
+    <span class="kw">fn</span> <span class="ident">stop_motor</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span>;
+
+    <span class="doccomment">/// Start motor</span>
+    <span class="kw">fn</span> <span class="ident">start_motor</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span>;
+
+    <span class="doccomment">/// get typical scan mode of target LIDAR</span>
+    <span class="kw">fn</span> <span class="ident">get_typical_scan_mode</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">u16</span><span class="op">&gt;</span>;
+
+    <span class="doccomment">/// get typical scan mode of target LIDAR with timeout</span>
+    <span class="kw">fn</span> <span class="ident">get_typical_scan_mode_with_timeout</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">timeout</span>: <span class="ident">Duration</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">u16</span><span class="op">&gt;</span>;
+
+    <span class="doccomment">/// get all supported scan modes supported by the LIDAR</span>
+    <span class="kw">fn</span> <span class="ident">get_all_supported_scan_modes</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">ScanMode</span><span class="op">&gt;</span><span class="op">&gt;</span>;
+
+    <span class="doccomment">/// get all supported scan modes supported by the LIDAR with timeout</span>
+    <span class="kw">fn</span> <span class="ident">get_all_supported_scan_modes_with_timeout</span>(
+        <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>,
+        <span class="ident">timeout</span>: <span class="ident">Duration</span>,
+    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">ScanMode</span><span class="op">&gt;</span><span class="op">&gt;</span>;
+
+    <span class="doccomment">/// start scan</span>
+    <span class="kw">fn</span> <span class="ident">start_scan</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">ScanMode</span><span class="op">&gt;</span>;
+
+    <span class="doccomment">/// start scan with timeout</span>
+    <span class="kw">fn</span> <span class="ident">start_scan_with_timeout</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">timeout</span>: <span class="ident">Duration</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">ScanMode</span><span class="op">&gt;</span>;
+
+    <span class="doccomment">/// start scan with options</span>
+    <span class="kw">fn</span> <span class="ident">start_scan_with_options</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">options</span>: <span class="kw-2">&amp;</span><span class="ident">ScanOptions</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">ScanMode</span><span class="op">&gt;</span>;
+    <span class="doccomment">/// start scan with options and non-default timeout</span>
+    <span class="kw">fn</span> <span class="ident">start_scan_with_options_and_timeout</span>(
+        <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>,
+        <span class="ident">options</span>: <span class="kw-2">&amp;</span><span class="ident">ScanOptions</span>,
+        <span class="ident">timeout</span>: <span class="ident">Duration</span>,
+    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">ScanMode</span><span class="op">&gt;</span>;
+
+    <span class="doccomment">/// read scan point</span>
+    <span class="kw">fn</span> <span class="ident">grab_scan_point</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">ScanPoint</span><span class="op">&gt;</span>;
+
+    <span class="doccomment">/// read scan point with timeout</span>
+    <span class="kw">fn</span> <span class="ident">grab_scan_point_with_timeout</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">timeout</span>: <span class="ident">Duration</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">ScanPoint</span><span class="op">&gt;</span>;
+
+    <span class="doccomment">/// read scan frame</span>
+    <span class="kw">fn</span> <span class="ident">grab_scan</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">ScanPoint</span><span class="op">&gt;</span><span class="op">&gt;</span>;
+
+    <span class="doccomment">/// read scan frame</span>
+    <span class="kw">fn</span> <span class="ident">grab_scan_with_timeout</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">timeout</span>: <span class="ident">Duration</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">ScanPoint</span><span class="op">&gt;</span><span class="op">&gt;</span>;
+
+    <span class="doccomment">/// Get LIDAR health information</span>
+    <span class="kw">fn</span> <span class="ident">get_device_health</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Health</span><span class="op">&gt;</span>;
+
+    <span class="doccomment">/// Get LIDAR health information</span>
+    <span class="kw">fn</span> <span class="ident">get_device_health_with_timeout</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">timeout</span>: <span class="ident">Duration</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Health</span><span class="op">&gt;</span>;
+
+    <span class="doccomment">/// Check if the connected LIDAR supports motor control</span>
+    <span class="kw">fn</span> <span class="ident">check_motor_ctrl_support</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span>;
+
+    <span class="doccomment">/// Check if the connected LIDAR supports motor control with timeout</span>
+    <span class="kw">fn</span> <span class="ident">check_motor_ctrl_support_with_timeout</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">timeout</span>: <span class="ident">Duration</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span>;
+}
+
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">unix</span>)]</span>
 <span class="kw">impl</span> <span class="ident">RplidarDevice</span><span class="op">&lt;</span><span class="ident">TTYPort</span><span class="op">&gt;</span> {
     <span class="doccomment">/// Construct a new RplidarDevice from a serial port address</span>
     <span class="doccomment">///</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">open_port</span>(<span class="ident">port_name</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
+    <span class="doccomment">/// You should use the `open_port` method if you want this boxed</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">open_native_port</span>(<span class="ident">port_name</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">port</span> <span class="op">=</span> <span class="ident">serialport::new</span>(<span class="ident">port_name</span>, <span class="ident">A1_DEFAULT_BAUDRATE</span>)
             .<span class="ident">timeout</span>(<span class="ident">Duration::from_millis</span>(<span class="number">1</span>))
             .<span class="ident">open_native</span>()<span class="question-mark">?</span>;
 
         <span class="ident">port</span>.<span class="ident">write_data_terminal_ready</span>(<span class="bool-val">false</span>)<span class="question-mark">?</span>;
-        <span class="comment">// Ok(RplidarDevice::with_stream(port))</span>
         <span class="kw">let</span> <span class="ident">channel</span> <span class="op">=</span> <span class="ident">rpos_drv::Channel::new</span>(<span class="ident">RplidarHostProtocol::new</span>(), <span class="ident">port</span>);
         <span class="prelude-val">Ok</span>(<span class="ident">RplidarDevice</span> {
             <span class="ident">channel</span>,
@@ -920,25 +1081,35 @@
             <span class="ident">cached_prev_capsule</span>: <span class="ident">CachedPrevCapsule::None</span>,
         })
     }
+
+    <span class="doccomment">/// Construct a new RplidarDriver from a serial port address</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">open_port</span>(<span class="ident">port_name</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">RplidarDriver</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+        <span class="prelude-val">Ok</span>(<span class="ident">Box::new</span>(<span class="self">Self</span><span class="ident">::open_native_port</span>(<span class="ident">port_name</span>)<span class="question-mark">?</span>))
+    }
 }
 
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">windows</span>)]</span>
 <span class="kw">impl</span> <span class="ident">RplidarDevice</span><span class="op">&lt;</span><span class="ident">COMPort</span><span class="op">&gt;</span> {
     <span class="doccomment">/// Construct a new RplidarDevice from a serial port address</span>
     <span class="doccomment">///</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">open_port</span>(<span class="ident">port_name</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
+    <span class="doccomment">/// You should use the `open_port` method if you want this boxed</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">open_native_port</span>(<span class="ident">port_name</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">port</span> <span class="op">=</span> <span class="ident">serialport::new</span>(<span class="ident">port_name</span>, <span class="ident">A1_DEFAULT_BAUDRATE</span>)
             .<span class="ident">timeout</span>(<span class="ident">Duration::from_millis</span>(<span class="number">1</span>))
             .<span class="ident">open_native</span>()<span class="question-mark">?</span>;
 
         <span class="ident">port</span>.<span class="ident">write_data_terminal_ready</span>(<span class="bool-val">false</span>)<span class="question-mark">?</span>;
-        <span class="comment">// Ok(RplidarDevice::with_stream(port))</span>
         <span class="kw">let</span> <span class="ident">channel</span> <span class="op">=</span> <span class="ident">rpos_drv::Channel::new</span>(<span class="ident">RplidarHostProtocol::new</span>(), <span class="ident">port</span>);
         <span class="prelude-val">Ok</span>(<span class="ident">RplidarDevice</span> {
             <span class="ident">channel</span>,
             <span class="ident">cached_measurement_nodes</span>: <span class="ident">VecDeque::with_capacity</span>(<span class="ident">RPLIDAR_DEFAULT_CACHE_DEPTH</span>),
             <span class="ident">cached_prev_capsule</span>: <span class="ident">CachedPrevCapsule::None</span>,
         })
+    }
+
+    <span class="doccomment">/// Construct a new RplidarDriver from a serial port address</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">open_port</span>(<span class="ident">port_name</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">RplidarDriver</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+        <span class="prelude-val">Ok</span>(<span class="ident">Box::new</span>(<span class="self">Self</span><span class="ident">::open_native_port</span>(<span class="ident">port_name</span>)<span class="question-mark">?</span>))
     }
 }
 
@@ -972,74 +1143,6 @@
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">with_stream</span>(<span class="ident">port</span>: <span class="ident">T</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
         <span class="ident">RplidarDevice::new</span>(<span class="ident">rpos_drv::Channel::new</span>(<span class="ident">RplidarHostProtocol::new</span>(), <span class="ident">port</span>))
     }
-
-    <span class="doccomment">/// get device info of the RPLIDAR</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_device_info</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">RplidarResponseDeviceInfo</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">get_device_info_with_timeout</span>(<span class="ident">RPLIDAR_DEFAULT_TIMEOUT</span>)
-    }
-
-    <span class="doccomment">/// get device info of the RPLIDAR with timeout</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_device_info_with_timeout</span>(
-        <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>,
-        <span class="ident">timeout</span>: <span class="ident">Duration</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">RplidarResponseDeviceInfo</span><span class="op">&gt;</span> {
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">msg</span>) <span class="op">=</span> <span class="self">self</span>
-            .<span class="ident">channel</span>
-            .<span class="ident">invoke</span>(<span class="kw-2">&amp;</span><span class="ident">Message::new</span>(<span class="ident">RPLIDAR_CMD_GET_DEVICE_INFO</span>), <span class="ident">timeout</span>)<span class="question-mark">?</span>
-        {
-            <span class="kw">return</span> <span class="macro">handle_resp!</span>(<span class="ident">RPLIDAR_ANS_TYPE_DEVINFO</span>, <span class="ident">msg</span>, <span class="ident">RplidarResponseDeviceInfo</span>);
-        }
-
-        <span class="prelude-val">Err</span>(<span class="ident">RposError::OperationTimeout</span>.<span class="ident">into</span>())
-    }
-
-    <span class="doccomment">/// Stop lidar</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">stop</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">stop_motor</span>()<span class="question-mark">?</span>;
-        <span class="self">self</span>.<span class="ident">channel</span>.<span class="ident">write</span>(<span class="kw-2">&amp;</span><span class="ident">Message::new</span>(<span class="ident">RPLIDAR_CMD_STOP</span>))<span class="question-mark">?</span>;
-        <span class="prelude-val">Ok</span>(())
-    }
-
-    <span class="doccomment">/// Reset RPLIDAR core</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">core_reset</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">channel</span>.<span class="ident">write</span>(<span class="kw-2">&amp;</span><span class="ident">Message::new</span>(<span class="ident">RPLIDAR_CMD_RESET</span>))<span class="question-mark">?</span>;
-        <span class="prelude-val">Ok</span>(())
-    }
-
-    <span class="doccomment">/// Set motor PWM (via accessory board)</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_motor_pwm</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">pwm</span>: <span class="ident">u16</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">payload</span> <span class="op">=</span> [<span class="number">0</span>; <span class="number">2</span>];
-        <span class="ident">LittleEndian::write_u16</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">payload</span>, <span class="ident">pwm</span>);
-
-        <span class="self">self</span>.<span class="ident">channel</span>
-            .<span class="ident">write</span>(<span class="kw-2">&amp;</span><span class="ident">Message::with_data</span>(<span class="ident">RPLIDAR_CMD_SET_MOTOR_PWM</span>, <span class="kw-2">&amp;</span><span class="ident">payload</span>))<span class="question-mark">?</span>;
-
-        <span class="prelude-val">Ok</span>(())
-    }
-
-    <span class="doccomment">/// Stop motor</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">stop_motor</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">channel</span>.<span class="ident">set_dtr_ready</span>(<span class="bool-val">true</span>)<span class="question-mark">?</span>;
-        <span class="self">self</span>.<span class="ident">set_motor_pwm</span>(<span class="number">0</span>)
-    }
-
-    <span class="doccomment">/// Start motor</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">start_motor</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">channel</span>.<span class="ident">set_dtr_ready</span>(<span class="bool-val">false</span>)<span class="question-mark">?</span>;
-        <span class="self">self</span>.<span class="ident">set_motor_pwm</span>(<span class="ident">RPLIDAR_DEFAULT_MOTOR_PWM</span>)
-    }
-
-    <span class="comment">/*
-    /// Get LIDAR config
-    fn get_lidar_conf(&amp;mut self, config_type: u32) -&gt; Result&lt;Vec&lt;u8&gt;&gt; {
-        self.get_lidar_conf_with_timeout(config_type, RPLIDAR_DEFAULT_TIMEOUT)
-    }
-
-    /// get lidar config with parameter
-    fn get_lidar_conf_with_param(&amp;mut self, config_type: u32, param: &amp;[u8]) -&gt; Result&lt;Vec&lt;u8&gt;&gt; {
-        self.get_lidar_conf_with_param_and_timeout(config_type, param, RPLIDAR_DEFAULT_TIMEOUT)
-    }
-    */</span>
 
     <span class="doccomment">/// get lidar config with timeout</span>
     <span class="kw">fn</span> <span class="ident">get_lidar_conf_with_timeout</span>(
@@ -1083,29 +1186,6 @@
         } <span class="kw">else</span> {
             <span class="prelude-val">Err</span>(<span class="ident">RposError::OperationTimeout</span>.<span class="ident">into</span>())
         }
-    }
-
-    <span class="doccomment">/// get typical scan mode of target LIDAR</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_typical_scan_mode</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">u16</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">get_typical_scan_mode_with_timeout</span>(<span class="ident">RPLIDAR_DEFAULT_TIMEOUT</span>)
-    }
-
-    <span class="doccomment">/// get typical scan mode of target LIDAR with timeout</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_typical_scan_mode_with_timeout</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">timeout</span>: <span class="ident">Duration</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">u16</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">device_info</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">get_device_info_with_timeout</span>(<span class="ident">timeout</span>)<span class="question-mark">?</span>;
-
-        <span class="kw">if</span> <span class="ident">device_info</span>.<span class="ident">firmware_version</span> <span class="op">&lt;</span> <span class="ident">RPLIDAR_GET_LIDAR_CONF_START_VERSION</span> {
-            <span class="kw">return</span> <span class="prelude-val">Ok</span>(<span class="kw">if</span> <span class="ident">device_info</span>.<span class="ident">model</span> <span class="op">&gt;</span><span class="op">=</span> <span class="number">0x20u8</span> {
-                <span class="number">1u16</span>
-            } <span class="kw">else</span> {
-                <span class="number">0u16</span>
-            });
-        }
-
-        <span class="kw">let</span> <span class="ident">scan_mode_data</span> <span class="op">=</span>
-            <span class="self">self</span>.<span class="ident">get_lidar_conf_with_timeout</span>(<span class="ident">RPLIDAR_CONF_SCAN_MODE_TYPICAL</span>, <span class="ident">timeout</span>)<span class="question-mark">?</span>;
-
-        <span class="kw">return</span> <span class="macro">parse_resp_data!</span>(<span class="ident">scan_mode_data</span>, <span class="ident">u16</span>);
     }
 
     <span class="doccomment">/// get lidar sample duration</span>
@@ -1203,97 +1283,6 @@
             <span class="ident">ans_type</span>: <span class="self">self</span>.<span class="ident">get_scan_mode_ans_type_with_timeout</span>(<span class="ident">scan_mode</span>, <span class="ident">timeout</span>)<span class="question-mark">?</span>,
             <span class="ident">name</span>: <span class="self">self</span>.<span class="ident">get_scan_mode_name_with_timeout</span>(<span class="ident">scan_mode</span>, <span class="ident">timeout</span>)<span class="question-mark">?</span>,
         })
-    }
-
-    <span class="doccomment">/// get all supported scan modes supported by the LIDAR</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_all_supported_scan_modes</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">ScanMode</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">get_all_supported_scan_modes_with_timeout</span>(<span class="ident">RPLIDAR_DEFAULT_TIMEOUT</span>)
-    }
-
-    <span class="doccomment">/// get all supported scan modes supported by the LIDAR with timeout</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_all_supported_scan_modes_with_timeout</span>(
-        <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>,
-        <span class="ident">timeout</span>: <span class="ident">Duration</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">ScanMode</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">device_info</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">get_device_info_with_timeout</span>(<span class="ident">timeout</span>)<span class="question-mark">?</span>;
-
-        <span class="kw">if</span> <span class="ident">device_info</span>.<span class="ident">firmware_version</span> <span class="op">&lt;</span> <span class="ident">RPLIDAR_GET_LIDAR_CONF_START_VERSION</span> {
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">output</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">ScanMode</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">Vec::with_capacity</span>(<span class="number">2</span>);
-
-            <span class="ident">output</span>.<span class="ident">push</span>(<span class="ident">ScanMode</span> {
-                <span class="ident">id</span>: <span class="number">0u16</span>,
-                <span class="ident">us_per_sample</span>: <span class="number">1000000f32</span> <span class="op">/</span> <span class="number">2000f32</span>,
-                <span class="ident">max_distance</span>: <span class="number">8000f32</span>,
-                <span class="ident">ans_type</span>: <span class="ident">RPLIDAR_ANS_TYPE_MEASUREMENT</span>,
-                <span class="ident">name</span>: <span class="string">&quot;Standard&quot;</span>.<span class="ident">to_owned</span>(),
-            });
-
-            <span class="kw">if</span> <span class="ident">device_info</span>.<span class="ident">model</span> <span class="op">&gt;</span><span class="op">=</span> <span class="number">0x20u8</span> {
-                <span class="ident">output</span>.<span class="ident">push</span>(<span class="ident">ScanMode</span> {
-                    <span class="ident">id</span>: <span class="number">1u16</span>,
-                    <span class="ident">us_per_sample</span>: <span class="number">1000000f32</span> <span class="op">/</span> <span class="number">4000f32</span>,
-                    <span class="ident">max_distance</span>: <span class="number">16000f32</span>,
-                    <span class="ident">ans_type</span>: <span class="ident">RPLIDAR_ANS_TYPE_MEASUREMENT_CAPSULED</span>,
-                    <span class="ident">name</span>: <span class="string">&quot;Express&quot;</span>.<span class="ident">to_owned</span>(),
-                });
-            }
-
-            <span class="prelude-val">Ok</span>(<span class="ident">output</span>)
-        } <span class="kw">else</span> {
-            <span class="kw">let</span> <span class="ident">scan_mode_count</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">get_scan_mode_count_with_timeout</span>(<span class="ident">timeout</span>)<span class="question-mark">?</span>;
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">output</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">ScanMode</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">Vec::with_capacity</span>(<span class="ident">scan_mode_count</span> <span class="kw">as</span> <span class="ident">usize</span>);
-
-            <span class="kw">for</span> <span class="ident">i</span> <span class="kw">in</span> <span class="number">0</span>..<span class="ident">scan_mode_count</span> {
-                <span class="ident">output</span>.<span class="ident">push</span>(<span class="self">self</span>.<span class="ident">get_scan_mode_with_timeout</span>(<span class="ident">i</span> <span class="kw">as</span> <span class="ident">u16</span>, <span class="ident">timeout</span>)<span class="question-mark">?</span>);
-            }
-
-            <span class="prelude-val">Ok</span>(<span class="ident">output</span>)
-        }
-    }
-
-    <span class="doccomment">/// start scan</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">start_scan</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">ScanMode</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">start_scan_with_options</span>(<span class="kw-2">&amp;</span><span class="ident">ScanOptions::default</span>())
-    }
-
-    <span class="doccomment">/// start scan with timeout</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">start_scan_with_timeout</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">timeout</span>: <span class="ident">Duration</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">ScanMode</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">start_scan_with_options_and_timeout</span>(<span class="kw-2">&amp;</span><span class="ident">ScanOptions::default</span>(), <span class="ident">timeout</span>)
-    }
-
-    <span class="doccomment">/// start scan with options</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">start_scan_with_options</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">options</span>: <span class="kw-2">&amp;</span><span class="ident">ScanOptions</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">ScanMode</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">start_scan_with_options_and_timeout</span>(<span class="ident">options</span>, <span class="ident">RPLIDAR_DEFAULT_TIMEOUT</span>)
-    }
-
-    <span class="doccomment">/// start scan with options and non-default timeout</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">start_scan_with_options_and_timeout</span>(
-        <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>,
-        <span class="ident">options</span>: <span class="kw-2">&amp;</span><span class="ident">ScanOptions</span>,
-        <span class="ident">timeout</span>: <span class="ident">Duration</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">ScanMode</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">cached_prev_capsule</span> <span class="op">=</span> <span class="ident">CachedPrevCapsule::None</span>;
-
-        <span class="kw">let</span> <span class="ident">scan_mode</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">options</span>.<span class="ident">scan_mode</span> {
-            <span class="prelude-val">Some</span>(<span class="ident">mode</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">mode</span>,
-            <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="self">self</span>.<span class="ident">get_typical_scan_mode_with_timeout</span>(<span class="ident">timeout</span>)<span class="question-mark">?</span>,
-        };
-
-        <span class="kw">let</span> <span class="ident">scan_mode_info</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">get_scan_mode_with_timeout</span>(<span class="ident">scan_mode</span>, <span class="ident">timeout</span>)<span class="question-mark">?</span>;
-
-        <span class="kw">match</span> <span class="ident">scan_mode</span> {
-            <span class="number">0</span> <span class="op">=</span><span class="op">&gt;</span> <span class="self">self</span>.<span class="ident">legacy_start_scan</span>(<span class="ident">options</span>.<span class="ident">force_scan</span>)<span class="question-mark">?</span>,
-            <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> {
-                <span class="kw">let</span> <span class="ident">payload</span> <span class="op">=</span> <span class="ident">RplidarPayloadExpressScan</span> {
-                    <span class="ident">work_mode</span>: <span class="ident">scan_mode</span> <span class="kw">as</span> <span class="ident">u8</span>,
-                    <span class="ident">work_flags</span>: <span class="ident">options</span>.<span class="ident">options</span> <span class="kw">as</span> <span class="ident">u16</span>,
-                    <span class="ident">param</span>: <span class="number">0</span>,
-                };
-                <span class="self">self</span>.<span class="ident">start_express_scan</span>(<span class="kw-2">&amp;</span><span class="ident">payload</span>)<span class="question-mark">?</span>;
-            }
-        }
-
-        <span class="prelude-val">Ok</span>(<span class="ident">scan_mode_info</span>)
     }
 
     <span class="doccomment">/// use legacy command to start scan</span>
@@ -1424,14 +1413,189 @@
             <span class="prelude-val">Ok</span>(())
         }
     }
+}
+
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="ident">RplidarDriver</span> <span class="kw">for</span> <span class="ident">RplidarDevice</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>
+<span class="kw">where</span>
+    <span class="ident">T</span>: <span class="ident">serialport::SerialPort</span>,
+{
+    <span class="doccomment">/// get device info of the RPLIDAR</span>
+    <span class="kw">fn</span> <span class="ident">get_device_info</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">RplidarResponseDeviceInfo</span><span class="op">&gt;</span> {
+        <span class="self">self</span>.<span class="ident">get_device_info_with_timeout</span>(<span class="ident">RPLIDAR_DEFAULT_TIMEOUT</span>)
+    }
+
+    <span class="doccomment">/// get device info of the RPLIDAR with timeout</span>
+    <span class="kw">fn</span> <span class="ident">get_device_info_with_timeout</span>(
+        <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>,
+        <span class="ident">timeout</span>: <span class="ident">Duration</span>,
+    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">RplidarResponseDeviceInfo</span><span class="op">&gt;</span> {
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">msg</span>) <span class="op">=</span> <span class="self">self</span>
+            .<span class="ident">channel</span>
+            .<span class="ident">invoke</span>(<span class="kw-2">&amp;</span><span class="ident">Message::new</span>(<span class="ident">RPLIDAR_CMD_GET_DEVICE_INFO</span>), <span class="ident">timeout</span>)<span class="question-mark">?</span>
+        {
+            <span class="kw">return</span> <span class="macro">handle_resp!</span>(<span class="ident">RPLIDAR_ANS_TYPE_DEVINFO</span>, <span class="ident">msg</span>, <span class="ident">RplidarResponseDeviceInfo</span>);
+        }
+
+        <span class="prelude-val">Err</span>(<span class="ident">RposError::OperationTimeout</span>.<span class="ident">into</span>())
+    }
+
+    <span class="doccomment">/// Stop lidar</span>
+    <span class="kw">fn</span> <span class="ident">stop</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+        <span class="self">self</span>.<span class="ident">stop_motor</span>()<span class="question-mark">?</span>;
+        <span class="self">self</span>.<span class="ident">channel</span>.<span class="ident">write</span>(<span class="kw-2">&amp;</span><span class="ident">Message::new</span>(<span class="ident">RPLIDAR_CMD_STOP</span>))<span class="question-mark">?</span>;
+        <span class="prelude-val">Ok</span>(())
+    }
+
+    <span class="doccomment">/// Reset RPLIDAR core</span>
+    <span class="kw">fn</span> <span class="ident">core_reset</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+        <span class="self">self</span>.<span class="ident">channel</span>.<span class="ident">write</span>(<span class="kw-2">&amp;</span><span class="ident">Message::new</span>(<span class="ident">RPLIDAR_CMD_RESET</span>))<span class="question-mark">?</span>;
+        <span class="prelude-val">Ok</span>(())
+    }
+
+    <span class="doccomment">/// Set motor PWM (via accessory board)</span>
+    <span class="kw">fn</span> <span class="ident">set_motor_pwm</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">pwm</span>: <span class="ident">u16</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">payload</span> <span class="op">=</span> [<span class="number">0</span>; <span class="number">2</span>];
+        <span class="ident">LittleEndian::write_u16</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">payload</span>, <span class="ident">pwm</span>);
+
+        <span class="self">self</span>.<span class="ident">channel</span>
+            .<span class="ident">write</span>(<span class="kw-2">&amp;</span><span class="ident">Message::with_data</span>(<span class="ident">RPLIDAR_CMD_SET_MOTOR_PWM</span>, <span class="kw-2">&amp;</span><span class="ident">payload</span>))<span class="question-mark">?</span>;
+
+        <span class="prelude-val">Ok</span>(())
+    }
+
+    <span class="doccomment">/// Stop motor</span>
+    <span class="kw">fn</span> <span class="ident">stop_motor</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+        <span class="self">self</span>.<span class="ident">channel</span>.<span class="ident">set_dtr_ready</span>(<span class="bool-val">true</span>)<span class="question-mark">?</span>;
+        <span class="self">self</span>.<span class="ident">set_motor_pwm</span>(<span class="number">0</span>)
+    }
+
+    <span class="doccomment">/// Start motor</span>
+    <span class="kw">fn</span> <span class="ident">start_motor</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+        <span class="self">self</span>.<span class="ident">channel</span>.<span class="ident">set_dtr_ready</span>(<span class="bool-val">false</span>)<span class="question-mark">?</span>;
+        <span class="self">self</span>.<span class="ident">set_motor_pwm</span>(<span class="ident">RPLIDAR_DEFAULT_MOTOR_PWM</span>)
+    }
+
+    <span class="doccomment">/// get typical scan mode of target LIDAR</span>
+    <span class="kw">fn</span> <span class="ident">get_typical_scan_mode</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">u16</span><span class="op">&gt;</span> {
+        <span class="self">self</span>.<span class="ident">get_typical_scan_mode_with_timeout</span>(<span class="ident">RPLIDAR_DEFAULT_TIMEOUT</span>)
+    }
+
+    <span class="doccomment">/// get typical scan mode of target LIDAR with timeout</span>
+    <span class="kw">fn</span> <span class="ident">get_typical_scan_mode_with_timeout</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">timeout</span>: <span class="ident">Duration</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">u16</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="ident">device_info</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">get_device_info_with_timeout</span>(<span class="ident">timeout</span>)<span class="question-mark">?</span>;
+
+        <span class="kw">if</span> <span class="ident">device_info</span>.<span class="ident">firmware_version</span> <span class="op">&lt;</span> <span class="ident">RPLIDAR_GET_LIDAR_CONF_START_VERSION</span> {
+            <span class="kw">return</span> <span class="prelude-val">Ok</span>(<span class="kw">if</span> <span class="ident">device_info</span>.<span class="ident">model</span> <span class="op">&gt;</span><span class="op">=</span> <span class="number">0x20u8</span> {
+                <span class="number">1u16</span>
+            } <span class="kw">else</span> {
+                <span class="number">0u16</span>
+            });
+        }
+
+        <span class="kw">let</span> <span class="ident">scan_mode_data</span> <span class="op">=</span>
+            <span class="self">self</span>.<span class="ident">get_lidar_conf_with_timeout</span>(<span class="ident">RPLIDAR_CONF_SCAN_MODE_TYPICAL</span>, <span class="ident">timeout</span>)<span class="question-mark">?</span>;
+
+        <span class="kw">return</span> <span class="macro">parse_resp_data!</span>(<span class="ident">scan_mode_data</span>, <span class="ident">u16</span>);
+    }
+
+    <span class="doccomment">/// get all supported scan modes supported by the LIDAR</span>
+    <span class="kw">fn</span> <span class="ident">get_all_supported_scan_modes</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">ScanMode</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+        <span class="self">self</span>.<span class="ident">get_all_supported_scan_modes_with_timeout</span>(<span class="ident">RPLIDAR_DEFAULT_TIMEOUT</span>)
+    }
+
+    <span class="doccomment">/// get all supported scan modes supported by the LIDAR with timeout</span>
+    <span class="kw">fn</span> <span class="ident">get_all_supported_scan_modes_with_timeout</span>(
+        <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>,
+        <span class="ident">timeout</span>: <span class="ident">Duration</span>,
+    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">ScanMode</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="ident">device_info</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">get_device_info_with_timeout</span>(<span class="ident">timeout</span>)<span class="question-mark">?</span>;
+
+        <span class="kw">if</span> <span class="ident">device_info</span>.<span class="ident">firmware_version</span> <span class="op">&lt;</span> <span class="ident">RPLIDAR_GET_LIDAR_CONF_START_VERSION</span> {
+            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">output</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">ScanMode</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">Vec::with_capacity</span>(<span class="number">2</span>);
+
+            <span class="ident">output</span>.<span class="ident">push</span>(<span class="ident">ScanMode</span> {
+                <span class="ident">id</span>: <span class="number">0u16</span>,
+                <span class="ident">us_per_sample</span>: <span class="number">1000000f32</span> <span class="op">/</span> <span class="number">2000f32</span>,
+                <span class="ident">max_distance</span>: <span class="number">8000f32</span>,
+                <span class="ident">ans_type</span>: <span class="ident">RPLIDAR_ANS_TYPE_MEASUREMENT</span>,
+                <span class="ident">name</span>: <span class="string">&quot;Standard&quot;</span>.<span class="ident">to_owned</span>(),
+            });
+
+            <span class="kw">if</span> <span class="ident">device_info</span>.<span class="ident">model</span> <span class="op">&gt;</span><span class="op">=</span> <span class="number">0x20u8</span> {
+                <span class="ident">output</span>.<span class="ident">push</span>(<span class="ident">ScanMode</span> {
+                    <span class="ident">id</span>: <span class="number">1u16</span>,
+                    <span class="ident">us_per_sample</span>: <span class="number">1000000f32</span> <span class="op">/</span> <span class="number">4000f32</span>,
+                    <span class="ident">max_distance</span>: <span class="number">16000f32</span>,
+                    <span class="ident">ans_type</span>: <span class="ident">RPLIDAR_ANS_TYPE_MEASUREMENT_CAPSULED</span>,
+                    <span class="ident">name</span>: <span class="string">&quot;Express&quot;</span>.<span class="ident">to_owned</span>(),
+                });
+            }
+
+            <span class="prelude-val">Ok</span>(<span class="ident">output</span>)
+        } <span class="kw">else</span> {
+            <span class="kw">let</span> <span class="ident">scan_mode_count</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">get_scan_mode_count_with_timeout</span>(<span class="ident">timeout</span>)<span class="question-mark">?</span>;
+            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">output</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">ScanMode</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">Vec::with_capacity</span>(<span class="ident">scan_mode_count</span> <span class="kw">as</span> <span class="ident">usize</span>);
+
+            <span class="kw">for</span> <span class="ident">i</span> <span class="kw">in</span> <span class="number">0</span>..<span class="ident">scan_mode_count</span> {
+                <span class="ident">output</span>.<span class="ident">push</span>(<span class="self">self</span>.<span class="ident">get_scan_mode_with_timeout</span>(<span class="ident">i</span> <span class="kw">as</span> <span class="ident">u16</span>, <span class="ident">timeout</span>)<span class="question-mark">?</span>);
+            }
+
+            <span class="prelude-val">Ok</span>(<span class="ident">output</span>)
+        }
+    }
+
+    <span class="doccomment">/// start scan</span>
+    <span class="kw">fn</span> <span class="ident">start_scan</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">ScanMode</span><span class="op">&gt;</span> {
+        <span class="self">self</span>.<span class="ident">start_scan_with_options</span>(<span class="kw-2">&amp;</span><span class="ident">ScanOptions::default</span>())
+    }
+
+    <span class="doccomment">/// start scan with timeout</span>
+    <span class="kw">fn</span> <span class="ident">start_scan_with_timeout</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">timeout</span>: <span class="ident">Duration</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">ScanMode</span><span class="op">&gt;</span> {
+        <span class="self">self</span>.<span class="ident">start_scan_with_options_and_timeout</span>(<span class="kw-2">&amp;</span><span class="ident">ScanOptions::default</span>(), <span class="ident">timeout</span>)
+    }
+
+    <span class="doccomment">/// start scan with options</span>
+    <span class="kw">fn</span> <span class="ident">start_scan_with_options</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">options</span>: <span class="kw-2">&amp;</span><span class="ident">ScanOptions</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">ScanMode</span><span class="op">&gt;</span> {
+        <span class="self">self</span>.<span class="ident">start_scan_with_options_and_timeout</span>(<span class="ident">options</span>, <span class="ident">RPLIDAR_DEFAULT_TIMEOUT</span>)
+    }
+
+    <span class="doccomment">/// start scan with options and non-default timeout</span>
+    <span class="kw">fn</span> <span class="ident">start_scan_with_options_and_timeout</span>(
+        <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>,
+        <span class="ident">options</span>: <span class="kw-2">&amp;</span><span class="ident">ScanOptions</span>,
+        <span class="ident">timeout</span>: <span class="ident">Duration</span>,
+    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">ScanMode</span><span class="op">&gt;</span> {
+        <span class="self">self</span>.<span class="ident">cached_prev_capsule</span> <span class="op">=</span> <span class="ident">CachedPrevCapsule::None</span>;
+
+        <span class="kw">let</span> <span class="ident">scan_mode</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">options</span>.<span class="ident">scan_mode</span> {
+            <span class="prelude-val">Some</span>(<span class="ident">mode</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">mode</span>,
+            <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="self">self</span>.<span class="ident">get_typical_scan_mode_with_timeout</span>(<span class="ident">timeout</span>)<span class="question-mark">?</span>,
+        };
+
+        <span class="kw">let</span> <span class="ident">scan_mode_info</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">get_scan_mode_with_timeout</span>(<span class="ident">scan_mode</span>, <span class="ident">timeout</span>)<span class="question-mark">?</span>;
+
+        <span class="kw">match</span> <span class="ident">scan_mode</span> {
+            <span class="number">0</span> <span class="op">=</span><span class="op">&gt;</span> <span class="self">self</span>.<span class="ident">legacy_start_scan</span>(<span class="ident">options</span>.<span class="ident">force_scan</span>)<span class="question-mark">?</span>,
+            <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> {
+                <span class="kw">let</span> <span class="ident">payload</span> <span class="op">=</span> <span class="ident">RplidarPayloadExpressScan</span> {
+                    <span class="ident">work_mode</span>: <span class="ident">scan_mode</span> <span class="kw">as</span> <span class="ident">u8</span>,
+                    <span class="ident">work_flags</span>: <span class="ident">options</span>.<span class="ident">options</span> <span class="kw">as</span> <span class="ident">u16</span>,
+                    <span class="ident">param</span>: <span class="number">0</span>,
+                };
+                <span class="self">self</span>.<span class="ident">start_express_scan</span>(<span class="kw-2">&amp;</span><span class="ident">payload</span>)<span class="question-mark">?</span>;
+            }
+        }
+
+        <span class="prelude-val">Ok</span>(<span class="ident">scan_mode_info</span>)
+    }
 
     <span class="doccomment">/// read scan point</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">grab_scan_point</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">ScanPoint</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">grab_scan_point</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">ScanPoint</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">grab_scan_point_with_timeout</span>(<span class="ident">RPLIDAR_DEFAULT_TIMEOUT</span>)
     }
 
     <span class="doccomment">/// read scan point with timeout</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">grab_scan_point_with_timeout</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">timeout</span>: <span class="ident">Duration</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">ScanPoint</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">grab_scan_point_with_timeout</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">timeout</span>: <span class="ident">Duration</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">ScanPoint</span><span class="op">&gt;</span> {
         <span class="kw">if</span> <span class="self">self</span>.<span class="ident">cached_measurement_nodes</span>.<span class="ident">is_empty</span>() {
             <span class="self">self</span>.<span class="ident">wait_scan_data_with_timeout</span>(<span class="ident">timeout</span>)<span class="question-mark">?</span>;
 
@@ -1444,12 +1608,12 @@
     }
 
     <span class="doccomment">/// read scan frame</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">grab_scan</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">ScanPoint</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">grab_scan</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">ScanPoint</span><span class="op">&gt;</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">grab_scan_with_timeout</span>(<span class="ident">RPLIDAR_DEFAULT_TIMEOUT</span> <span class="op">*</span> <span class="number">5</span>)
     }
 
     <span class="doccomment">/// read scan frame</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">grab_scan_with_timeout</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">timeout</span>: <span class="ident">Duration</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">ScanPoint</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">grab_scan_with_timeout</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">timeout</span>: <span class="ident">Duration</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">ScanPoint</span><span class="op">&gt;</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">deadline</span> <span class="op">=</span> <span class="ident">Instant::now</span>() <span class="op">+</span> <span class="ident">timeout</span>;
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">end</span> <span class="op">=</span> <span class="number">1</span>;
 
@@ -1487,12 +1651,12 @@
     }
 
     <span class="doccomment">/// Get LIDAR health information</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_device_health</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Health</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">get_device_health</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Health</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">get_device_health_with_timeout</span>(<span class="ident">RPLIDAR_DEFAULT_TIMEOUT</span>)
     }
 
     <span class="doccomment">/// Get LIDAR health information</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_device_health_with_timeout</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">timeout</span>: <span class="ident">Duration</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Health</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">get_device_health_with_timeout</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">timeout</span>: <span class="ident">Duration</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Health</span><span class="op">&gt;</span> {
         <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">msg</span>) <span class="op">=</span> <span class="self">self</span>
             .<span class="ident">channel</span>
             .<span class="ident">invoke</span>(<span class="kw-2">&amp;</span><span class="ident">Message::new</span>(<span class="ident">RPLIDAR_CMD_GET_DEVICE_HEALTH</span>), <span class="ident">timeout</span>)<span class="question-mark">?</span>
@@ -1511,12 +1675,12 @@
     }
 
     <span class="doccomment">/// Check if the connected LIDAR supports motor control</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">check_motor_ctrl_support</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">check_motor_ctrl_support</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">check_motor_ctrl_support_with_timeout</span>(<span class="ident">RPLIDAR_DEFAULT_TIMEOUT</span>)
     }
 
     <span class="doccomment">/// Check if the connected LIDAR supports motor control with timeout</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">check_motor_ctrl_support_with_timeout</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">timeout</span>: <span class="ident">Duration</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">check_motor_ctrl_support_with_timeout</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">timeout</span>: <span class="ident">Duration</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">data</span> <span class="op">=</span> [<span class="number">0u8</span>; <span class="number">4</span>];
         <span class="ident">LittleEndian::write_u32</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">data</span>, <span class="number">0u32</span>);
 
