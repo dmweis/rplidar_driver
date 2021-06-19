@@ -1,4 +1,4 @@
-# Rust driver for RPLIDAR A1
+# Rust driver for RPlidar A1
 
 This driver is based on [rplidar.rs](https://github.com/cnwzhjs/rplidar.rs) by [cnwzhjs](https://github.com/cnwzhjs) with some merges from [A fork](https://github.com/RoboticsTeam4904/rplidar.rs) by [RoboticsTeam4904](https://github.com/RoboticsTeam4904).
 
