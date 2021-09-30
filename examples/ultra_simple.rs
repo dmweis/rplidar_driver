@@ -19,7 +19,7 @@ fn main() {
 
     let serial_port = &args[1];
 
-    let mut rplidar = RplidarDevice::open_port(&serial_port).unwrap();
+    let mut rplidar = RplidarDevice::open_port(serial_port).unwrap();
 
     let device_info = rplidar
         .get_device_info()
@@ -114,10 +114,7 @@ fn main() {
 
                 sort_scan(&mut scan).unwrap();
 
-                let scan = scan
-                    .into_iter()
-                    .filter(|scan| scan.is_valid())
-                    .collect::<Vec<_>>();
+                let scan = scan.into_iter().filter(|scan| scan.is_valid());
 
                 if last_plot.elapsed() > Duration::from_secs_f32(2.0) {
                     last_plot = Instant::now();

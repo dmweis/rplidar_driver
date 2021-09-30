@@ -134,7 +134,7 @@ pub fn parse_ultra_capsuled(
         let mut output_nodes: Vec<RplidarResponseMeasurementNodeHq> = Vec::with_capacity(32 * 3);
 
         let cur_start_angle_q8 = get_start_angle_q8(&nodes);
-        let prev_start_angle_q8 = get_start_angle_q8(&prev_capsule);
+        let prev_start_angle_q8 = get_start_angle_q8(prev_capsule);
 
         let diff_angle_q8 = angle_diff_q8(prev_start_angle_q8, cur_start_angle_q8);
 
@@ -158,7 +158,7 @@ pub fn parse_ultra_capsuled(
             let parsed_nodes = generate_nodes(cur_major, next_major, cur_predict1, cur_predict2);
 
             for node in parsed_nodes.iter() {
-                output_nodes.push(to_hq(&node, cur_angle_raw_q16, angle_inc_q16));
+                output_nodes.push(to_hq(node, cur_angle_raw_q16, angle_inc_q16));
                 cur_angle_raw_q16 += angle_inc_q16;
             }
 

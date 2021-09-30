@@ -261,9 +261,9 @@ mod tests {
     use crate::rpos_drv::{Message, ProtocolEncoder, Result};
 
     fn encode<T: ProtocolEncoder>(protocol: &mut T, msg: &Message) -> Result<Vec<u8>> {
-        let encoded_bytes = protocol.estimate_encoded_size(&msg)?;
+        let encoded_bytes = protocol.estimate_encoded_size(msg)?;
         let mut buf = vec![0; encoded_bytes];
-        let encoded_bytes = protocol.encode(&msg, &mut buf[0..encoded_bytes])?;
+        let encoded_bytes = protocol.encode(msg, &mut buf[0..encoded_bytes])?;
         buf.truncate(encoded_bytes);
         Ok(buf)
     }

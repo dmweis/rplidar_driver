@@ -23,7 +23,7 @@ impl Message {
             data: Vec::with_capacity(data.len()),
         };
 
-        msg.data.extend_from_slice(&data);
+        msg.data.extend_from_slice(data);
 
         msg
     }

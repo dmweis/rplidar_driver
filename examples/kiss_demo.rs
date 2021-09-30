@@ -18,7 +18,7 @@ fn main() {
 
     let port_name = &args[1];
 
-    let mut rplidar = RplidarDevice::open_port(&port_name).unwrap();
+    let mut rplidar = RplidarDevice::open_port(port_name).unwrap();
 
     let device_info = rplidar
         .get_device_info()
@@ -117,10 +117,7 @@ fn main() {
 
                 sort_scan(&mut scan).unwrap();
 
-                let scan = scan
-                    .into_iter()
-                    .filter(|scan| scan.is_valid())
-                    .collect::<Vec<_>>();
+                let scan = scan.into_iter().filter(|scan| scan.is_valid());
 
                 let points = scan
                     .into_iter()
