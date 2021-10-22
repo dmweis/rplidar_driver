@@ -6,7 +6,7 @@ license = "BSD-2-Clause"
 repository = "https://github.com/dmweis/rplidar_driver"
 keywords = ["Slamtec", "Rplidar", "Driver"]
 authors = ["David Michael Weis <dweis7@gmail.com>"]
-edition = "2018"
+edition = "2021"
 
 [lib]
 name = "rplidar_driver"
