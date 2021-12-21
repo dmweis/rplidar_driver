@@ -99,7 +99,7 @@
 
 <span class="kw">const</span> <span class="ident">PI2</span>: <span class="ident">f32</span> <span class="op">=</span> <span class="ident">PI</span> <span class="op">*</span> <span class="number">2f32</span>;
 
-<span class="kw">fn</span> <span class="ident">find_first_valid_index</span>(<span class="ident">scan</span>: <span class="kw-2">&amp;</span>[<span class="ident">ScanPoint</span>]) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
+<span class="kw">fn</span> <span class="ident">find_first_valid_index</span>(<span class="ident">scan</span>: <span class="kw-2">&amp;</span>[<span class="ident">ScanPoint</span>]) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
     <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy::needless_range_loop</span>)]</span>
     <span class="kw">for</span> <span class="ident">i</span> <span class="kw">in</span> <span class="number">0</span>..<span class="ident">scan</span>.<span class="ident">len</span>() {
         <span class="kw">if</span> <span class="ident">scan</span>[<span class="ident">i</span>].<span class="ident">is_valid</span>() {
@@ -110,7 +110,7 @@
     <span class="prelude-val">None</span>
 }
 
-<span class="kw">fn</span> <span class="ident">find_last_valid_index</span>(<span class="ident">scan</span>: <span class="kw-2">&amp;</span>[<span class="ident">ScanPoint</span>]) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
+<span class="kw">fn</span> <span class="ident">find_last_valid_index</span>(<span class="ident">scan</span>: <span class="kw-2">&amp;</span>[<span class="ident">ScanPoint</span>]) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
     <span class="kw">for</span> <span class="ident">i</span> <span class="kw">in</span> <span class="number">0</span>..<span class="ident">scan</span>.<span class="ident">len</span>() {
         <span class="kw">let</span> <span class="ident">id</span> <span class="op">=</span> <span class="ident">scan</span>.<span class="ident">len</span>() <span class="op">-</span> <span class="ident">i</span> <span class="op">-</span> <span class="number">1</span>;
 
@@ -122,7 +122,7 @@
     <span class="prelude-val">None</span>
 }
 
-<span class="kw">fn</span> <span class="ident">tune_head</span>(<span class="ident">scan</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">ScanPoint</span><span class="op">&gt;</span>, <span class="ident">inc_origin_angle</span>: <span class="ident">f32</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+<span class="kw">fn</span> <span class="ident">tune_head</span>(<span class="ident">scan</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">ScanPoint</span><span class="op">&gt;</span>, <span class="ident">inc_origin_angle</span>: <span class="ident">f32</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
     <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">head_index</span>) <span class="op">=</span> <span class="ident">find_first_valid_index</span>(<span class="ident">scan</span>) {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">i</span> <span class="op">=</span> <span class="ident">head_index</span>;
 
@@ -143,7 +143,7 @@
     }
 }
 
-<span class="kw">fn</span> <span class="ident">tune_tail</span>(<span class="ident">scan</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">ScanPoint</span><span class="op">&gt;</span>, <span class="ident">inc_origin_angle</span>: <span class="ident">f32</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+<span class="kw">fn</span> <span class="ident">tune_tail</span>(<span class="ident">scan</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">ScanPoint</span><span class="op">&gt;</span>, <span class="ident">inc_origin_angle</span>: <span class="ident">f32</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
     <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">tail_index</span>) <span class="op">=</span> <span class="ident">find_last_valid_index</span>(<span class="ident">scan</span>) {
         <span class="kw">for</span> <span class="ident">i</span> <span class="kw">in</span> <span class="ident">tail_index</span> <span class="op">+</span> <span class="number">1</span>..<span class="ident">scan</span>.<span class="ident">len</span>() {
             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">expect_angle</span> <span class="op">=</span> <span class="ident">scan</span>[<span class="ident">i</span> <span class="op">-</span> <span class="number">1</span>].<span class="ident">angle</span>() <span class="op">+</span> <span class="ident">inc_origin_angle</span>;
@@ -162,7 +162,7 @@
 }
 
 <span class="doccomment">/// sort scan points</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">sort_scan</span>(<span class="ident">scan</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">ScanPoint</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">sort_scan</span>(<span class="ident">scan</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">ScanPoint</span><span class="op">&gt;</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
     <span class="kw">if</span> <span class="ident">scan</span>.<span class="ident">is_empty</span>() {
         <span class="kw">return</span> <span class="prelude-val">Ok</span>(());
     }

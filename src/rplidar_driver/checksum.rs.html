@@ -40,7 +40,7 @@
 
 <span class="kw">impl</span> <span class="ident">Checksum</span> {
     <span class="doccomment">/// create a new `Checksum`</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Checksum</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>() -&gt; <span class="ident">Checksum</span> {
         <span class="ident">Checksum</span> { <span class="ident">current</span>: <span class="number">0</span> }
     }
 
@@ -64,7 +64,7 @@
     }
 
     <span class="doccomment">/// output the calculated checksum</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">checksum</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">u8</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">checksum</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">u8</span> {
         <span class="self">self</span>.<span class="ident">current</span>
     }
 }

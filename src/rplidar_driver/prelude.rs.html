@@ -157,11 +157,11 @@
 }
 
 <span class="kw">impl</span> <span class="ident">ScanPoint</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">angle</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">f32</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">angle</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">f32</span> {
         (<span class="self">self</span>.<span class="ident">angle_z_q14</span> <span class="kw">as</span> <span class="ident">f32</span>) <span class="op">/</span> <span class="number">16384f32</span> <span class="op">/</span> <span class="number">2f32</span> <span class="op">*</span> <span class="ident">PI</span>
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">raw_angle</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">f32</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">raw_angle</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">f32</span> {
         <span class="self">self</span>.<span class="ident">angle_z_q14</span> <span class="kw">as</span> <span class="ident">f32</span>
     }
 
@@ -169,11 +169,11 @@
         <span class="self">self</span>.<span class="ident">angle_z_q14</span> <span class="op">=</span> (<span class="ident">angle</span> <span class="op">*</span> <span class="number">16384f32</span> <span class="op">*</span> <span class="number">2f32</span> <span class="op">/</span> <span class="ident">PI</span>) <span class="kw">as</span> <span class="ident">u16</span>;
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">distance</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">f32</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">distance</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">f32</span> {
         (<span class="self">self</span>.<span class="ident">dist_mm_q2</span> <span class="kw">as</span> <span class="ident">f32</span>) <span class="op">/</span> <span class="number">4000f32</span>
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">raw_distance</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">f32</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">raw_distance</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">f32</span> {
         <span class="self">self</span>.<span class="ident">dist_mm_q2</span> <span class="kw">as</span> <span class="ident">f32</span>
     }
 
@@ -181,33 +181,33 @@
         <span class="self">self</span>.<span class="ident">dist_mm_q2</span> <span class="op">=</span> (<span class="ident">dist</span> <span class="op">*</span> <span class="number">4000f32</span>) <span class="kw">as</span> <span class="ident">u32</span>;
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">is_sync</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span> {
-        (<span class="self">self</span>.<span class="ident">flag</span> <span class="op">&amp;</span> <span class="ident">RPLIDAR_RESP_HQ_FLAG_SYNCBIT</span>) <span class="op">=</span><span class="op">=</span> <span class="ident">RPLIDAR_RESP_HQ_FLAG_SYNCBIT</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">is_sync</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
+        (<span class="self">self</span>.<span class="ident">flag</span> <span class="op">&amp;</span> <span class="ident">RPLIDAR_RESP_HQ_FLAG_SYNCBIT</span>) <span class="op">==</span> <span class="ident">RPLIDAR_RESP_HQ_FLAG_SYNCBIT</span>
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">is_valid</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">is_valid</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
         <span class="self">self</span>.<span class="ident">quality</span> <span class="op">!</span><span class="op">=</span> <span class="number">0</span> <span class="op">&amp;&amp;</span> <span class="self">self</span>.<span class="ident">dist_mm_q2</span> <span class="op">!</span><span class="op">=</span> <span class="number">0</span>
     }
 }
 
 <span class="kw">impl</span> <span class="ident">Ord</span> <span class="kw">for</span> <span class="ident">ScanPoint</span> {
-    <span class="kw">fn</span> <span class="ident">cmp</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">other</span>: <span class="kw-2">&amp;</span><span class="ident">ScanPoint</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Ordering</span> {
+    <span class="kw">fn</span> <span class="ident">cmp</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">other</span>: <span class="kw-2">&amp;</span><span class="ident">ScanPoint</span>) -&gt; <span class="ident">Ordering</span> {
         <span class="self">self</span>.<span class="ident">angle_z_q14</span>.<span class="ident">cmp</span>(<span class="kw-2">&amp;</span><span class="ident">other</span>.<span class="ident">angle_z_q14</span>)
     }
 }
 
 <span class="kw">impl</span> <span class="ident">PartialOrd</span> <span class="kw">for</span> <span class="ident">ScanPoint</span> {
-    <span class="kw">fn</span> <span class="ident">partial_cmp</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">other</span>: <span class="kw-2">&amp;</span><span class="ident">ScanPoint</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Ordering</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">partial_cmp</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">other</span>: <span class="kw-2">&amp;</span><span class="ident">ScanPoint</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Ordering</span><span class="op">&gt;</span> {
         <span class="prelude-val">Some</span>(<span class="self">self</span>.<span class="ident">cmp</span>(<span class="ident">other</span>))
     }
 }
 
 <span class="kw">impl</span> <span class="ident">PartialEq</span> <span class="kw">for</span> <span class="ident">ScanPoint</span> {
-    <span class="kw">fn</span> <span class="ident">eq</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">other</span>: <span class="kw-2">&amp;</span><span class="ident">ScanPoint</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span> {
-        <span class="self">self</span>.<span class="ident">angle_z_q14</span> <span class="op">=</span><span class="op">=</span> <span class="ident">other</span>.<span class="ident">angle_z_q14</span>
-            <span class="op">&amp;&amp;</span> <span class="self">self</span>.<span class="ident">dist_mm_q2</span> <span class="op">=</span><span class="op">=</span> <span class="ident">other</span>.<span class="ident">dist_mm_q2</span>
-            <span class="op">&amp;&amp;</span> <span class="self">self</span>.<span class="ident">quality</span> <span class="op">=</span><span class="op">=</span> <span class="ident">other</span>.<span class="ident">quality</span>
-            <span class="op">&amp;&amp;</span> <span class="self">self</span>.<span class="ident">flag</span> <span class="op">=</span><span class="op">=</span> <span class="ident">other</span>.<span class="ident">flag</span>
+    <span class="kw">fn</span> <span class="ident">eq</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">other</span>: <span class="kw-2">&amp;</span><span class="ident">ScanPoint</span>) -&gt; <span class="ident">bool</span> {
+        <span class="self">self</span>.<span class="ident">angle_z_q14</span> <span class="op">==</span> <span class="ident">other</span>.<span class="ident">angle_z_q14</span>
+            <span class="op">&amp;&amp;</span> <span class="self">self</span>.<span class="ident">dist_mm_q2</span> <span class="op">==</span> <span class="ident">other</span>.<span class="ident">dist_mm_q2</span>
+            <span class="op">&amp;&amp;</span> <span class="self">self</span>.<span class="ident">quality</span> <span class="op">==</span> <span class="ident">other</span>.<span class="ident">quality</span>
+            <span class="op">&amp;&amp;</span> <span class="self">self</span>.<span class="ident">flag</span> <span class="op">==</span> <span class="ident">other</span>.<span class="ident">flag</span>
     }
 }
 
@@ -245,7 +245,7 @@
 
 <span class="kw">impl</span> <span class="ident">ScanOptions</span> {
     <span class="doccomment">/// default options</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">default</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">ScanOptions</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">default</span>() -&gt; <span class="ident">ScanOptions</span> {
         <span class="ident">ScanOptions</span> {
             <span class="ident">scan_mode</span>: <span class="prelude-val">None</span>,
             <span class="ident">force_scan</span>: <span class="bool-val">false</span>,
@@ -254,7 +254,7 @@
     }
 
     <span class="doccomment">/// with specific mode</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">with_mode</span>(<span class="ident">scan_mode</span>: <span class="ident">u16</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">ScanOptions</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">with_mode</span>(<span class="ident">scan_mode</span>: <span class="ident">u16</span>) -&gt; <span class="ident">ScanOptions</span> {
         <span class="ident">ScanOptions</span> {
             <span class="ident">scan_mode</span>: <span class="prelude-val">Some</span>(<span class="ident">scan_mode</span>),
             <span class="ident">force_scan</span>: <span class="bool-val">false</span>,
@@ -263,7 +263,7 @@
     }
 
     <span class="doccomment">/// force scan</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">force_scan</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">ScanOptions</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">force_scan</span>() -&gt; <span class="ident">ScanOptions</span> {
         <span class="ident">ScanOptions</span> {
             <span class="ident">scan_mode</span>: <span class="prelude-val">None</span>,
             <span class="ident">force_scan</span>: <span class="bool-val">true</span>,
@@ -272,7 +272,7 @@
     }
 
     <span class="doccomment">/// force scan with mode</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">force_scan_with_mode</span>(<span class="ident">scan_mode</span>: <span class="ident">u16</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">ScanOptions</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">force_scan_with_mode</span>(<span class="ident">scan_mode</span>: <span class="ident">u16</span>) -&gt; <span class="ident">ScanOptions</span> {
         <span class="ident">ScanOptions</span> {
             <span class="ident">scan_mode</span>: <span class="prelude-val">Some</span>(<span class="ident">scan_mode</span>),
             <span class="ident">force_scan</span>: <span class="bool-val">true</span>,

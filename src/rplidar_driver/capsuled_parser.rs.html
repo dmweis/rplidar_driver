@@ -117,11 +117,11 @@
 <span class="kw">const</span> <span class="ident">ANGLE_360_Q8</span>: <span class="ident">u32</span> <span class="op">=</span> <span class="number">360u32</span> <span class="op">&lt;</span><span class="op">&lt;</span> <span class="number">8</span>;
 <span class="kw">const</span> <span class="ident">ANGLE_360_Q16</span>: <span class="ident">u32</span> <span class="op">=</span> <span class="number">360u32</span> <span class="op">&lt;</span><span class="op">&lt;</span> <span class="number">16</span>;
 
-<span class="kw">fn</span> <span class="ident">get_start_angle_q8</span>(<span class="ident">nodes</span>: <span class="kw-2">&amp;</span><span class="ident">RplidarResponseCapsuleMeasurementNodes</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">u32</span> {
+<span class="kw">fn</span> <span class="ident">get_start_angle_q8</span>(<span class="ident">nodes</span>: <span class="kw-2">&amp;</span><span class="ident">RplidarResponseCapsuleMeasurementNodes</span>) -&gt; <span class="ident">u32</span> {
     ((<span class="ident">nodes</span>.<span class="ident">start_angle_sync_q6</span> <span class="op">&amp;</span> <span class="number">0x7fffu16</span>) <span class="kw">as</span> <span class="ident">u32</span>) <span class="op">&lt;</span><span class="op">&lt;</span> <span class="number">2</span>
 }
 
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">angle_diff_q8</span>(<span class="ident">prev_q8</span>: <span class="ident">u32</span>, <span class="ident">cur_q8</span>: <span class="ident">u32</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">u32</span> {
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">angle_diff_q8</span>(<span class="ident">prev_q8</span>: <span class="ident">u32</span>, <span class="ident">cur_q8</span>: <span class="ident">u32</span>) -&gt; <span class="ident">u32</span> {
     <span class="kw">if</span> <span class="ident">prev_q8</span> <span class="op">&gt;</span> <span class="ident">cur_q8</span> {
         <span class="ident">ANGLE_360_Q8</span> <span class="op">+</span> <span class="ident">cur_q8</span> <span class="op">-</span> <span class="ident">prev_q8</span>
     } <span class="kw">else</span> {
@@ -134,7 +134,7 @@
     <span class="kw">pub</span> <span class="ident">angle_offset_q3</span>: <span class="ident">u32</span>,
 }
 
-<span class="kw">fn</span> <span class="ident">parse_cabin</span>(<span class="ident">cabin</span>: <span class="kw-2">&amp;</span><span class="ident">RplidarResponseCabinNodes</span>) <span class="op">-</span><span class="op">&gt;</span> [<span class="ident">ParsedNode</span>; <span class="number">2</span>] {
+<span class="kw">fn</span> <span class="ident">parse_cabin</span>(<span class="ident">cabin</span>: <span class="kw-2">&amp;</span><span class="ident">RplidarResponseCabinNodes</span>) -&gt; [<span class="ident">ParsedNode</span>; <span class="number">2</span>] {
     <span class="kw">let</span> <span class="ident">dist_q2_1</span> <span class="op">=</span> <span class="ident">cabin</span>.<span class="ident">distance_angle_1</span> <span class="op">&amp;</span> <span class="number">0xfffc</span>;
     <span class="kw">let</span> <span class="ident">dist_q2_2</span> <span class="op">=</span> <span class="ident">cabin</span>.<span class="ident">distance_angle_2</span> <span class="op">&amp;</span> <span class="number">0xfffc</span>;
 
@@ -155,15 +155,15 @@
     ]
 }
 
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">check_sync</span>(<span class="ident">cur_angle_q16</span>: <span class="ident">u32</span>, <span class="ident">angle_inc_q16</span>: <span class="ident">u32</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span> {
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">check_sync</span>(<span class="ident">cur_angle_q16</span>: <span class="ident">u32</span>, <span class="ident">angle_inc_q16</span>: <span class="ident">u32</span>) -&gt; <span class="ident">bool</span> {
     ((<span class="ident">cur_angle_q16</span> <span class="op">+</span> <span class="ident">angle_inc_q16</span>) <span class="op">%</span> <span class="ident">ANGLE_360_Q16</span>) <span class="op">&lt;</span> <span class="ident">angle_inc_q16</span>
 }
 
-<span class="kw">fn</span> <span class="ident">angle_q6_to_angle_z_q14</span>(<span class="ident">angle_q6</span>: <span class="ident">u32</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">u16</span> {
+<span class="kw">fn</span> <span class="ident">angle_q6_to_angle_z_q14</span>(<span class="ident">angle_q6</span>: <span class="ident">u32</span>) -&gt; <span class="ident">u16</span> {
     ((<span class="ident">angle_q6</span> <span class="op">&lt;</span><span class="op">&lt;</span> <span class="number">8</span>) <span class="op">/</span> <span class="number">90</span>) <span class="kw">as</span> <span class="ident">u16</span>
 }
 
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">generate_quality</span>(<span class="ident">dist_q2</span>: <span class="ident">u32</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">u8</span> {
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">generate_quality</span>(<span class="ident">dist_q2</span>: <span class="ident">u32</span>) -&gt; <span class="ident">u8</span> {
     <span class="kw">if</span> <span class="ident">dist_q2</span> <span class="op">!</span><span class="op">=</span> <span class="number">0</span> {
         <span class="number">0x2fu8</span> <span class="op">&lt;</span><span class="op">&lt;</span> <span class="ident">RPLIDAR_RESP_MEASUREMENT_QUALITY_SHIFT</span>
     } <span class="kw">else</span> {
@@ -171,7 +171,7 @@
     }
 }
 
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">generate_flag</span>(<span class="ident">sync</span>: <span class="ident">bool</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">u8</span> {
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">generate_flag</span>(<span class="ident">sync</span>: <span class="ident">bool</span>) -&gt; <span class="ident">u8</span> {
     <span class="kw">if</span> <span class="ident">sync</span> {
         <span class="number">1u8</span>
     } <span class="kw">else</span> {
@@ -183,7 +183,7 @@
     <span class="ident">node</span>: <span class="kw-2">&amp;</span><span class="ident">ParsedNode</span>,
     <span class="ident">cur_angle_raw_q16</span>: <span class="ident">u32</span>,
     <span class="ident">angle_inc_q16</span>: <span class="ident">u32</span>,
-) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">RplidarResponseMeasurementNodeHq</span> {
+) -&gt; <span class="ident">RplidarResponseMeasurementNodeHq</span> {
     <span class="kw">let</span> <span class="ident">angle_q6</span> <span class="op">=</span> <span class="ident">cur_angle_raw_q16</span> <span class="op">-</span> ((<span class="ident">node</span>.<span class="ident">angle_offset_q3</span> <span class="op">&lt;</span><span class="op">&lt;</span> <span class="number">13</span>) <span class="op">&gt;</span><span class="op">&gt;</span> <span class="number">10</span>);
     <span class="kw">let</span> <span class="ident">sync</span> <span class="op">=</span> <span class="ident">check_sync</span>(<span class="ident">cur_angle_raw_q16</span>, <span class="ident">angle_inc_q16</span>);
 
@@ -198,7 +198,7 @@
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">parse_capsuled</span>(
     <span class="ident">cached_prev</span>: <span class="kw-2">&amp;</span><span class="ident">CachedPrevCapsule</span>,
     <span class="ident">nodes</span>: <span class="ident">RplidarResponseCapsuleMeasurementNodes</span>,
-) <span class="op">-</span><span class="op">&gt;</span> (<span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">RplidarResponseMeasurementNodeHq</span><span class="op">&gt;</span>, <span class="ident">CachedPrevCapsule</span>) {
+) -&gt; (<span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">RplidarResponseMeasurementNodeHq</span><span class="op">&gt;</span>, <span class="ident">CachedPrevCapsule</span>) {
     <span class="kw">if</span> <span class="kw">let</span> <span class="ident">CachedPrevCapsule::Capsuled</span>(<span class="ident">prev_capsule</span>) <span class="op">=</span> <span class="ident">cached_prev</span> {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">output_nodes</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">RplidarResponseMeasurementNodeHq</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">Vec::with_capacity</span>(<span class="number">32</span>);
 

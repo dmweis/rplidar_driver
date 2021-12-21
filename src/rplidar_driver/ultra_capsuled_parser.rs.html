@@ -184,15 +184,15 @@
     <span class="kw">pub</span> <span class="ident">angle_offset_q16</span>: <span class="ident">i32</span>,
 }
 
-<span class="kw">fn</span> <span class="ident">get_start_angle_q8</span>(<span class="ident">nodes</span>: <span class="kw-2">&amp;</span><span class="ident">RplidarResponseUltraCapsuleMeasurementNodes</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">u32</span> {
+<span class="kw">fn</span> <span class="ident">get_start_angle_q8</span>(<span class="ident">nodes</span>: <span class="kw-2">&amp;</span><span class="ident">RplidarResponseUltraCapsuleMeasurementNodes</span>) -&gt; <span class="ident">u32</span> {
     ((<span class="ident">nodes</span>.<span class="ident">start_angle_sync_q6</span> <span class="op">&amp;</span> <span class="number">0x7fffu16</span>) <span class="kw">as</span> <span class="ident">u32</span>) <span class="op">&lt;</span><span class="op">&lt;</span> <span class="number">2</span>
 }
 
-<span class="kw">fn</span> <span class="ident">deg_to_rad_q16</span>(<span class="ident">deg</span>: <span class="ident">f64</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">f64</span> {
+<span class="kw">fn</span> <span class="ident">deg_to_rad_q16</span>(<span class="ident">deg</span>: <span class="ident">f64</span>) -&gt; <span class="ident">f64</span> {
     <span class="ident">deg</span> <span class="op">*</span> <span class="ident">PI</span> <span class="op">*</span> <span class="number">65536f64</span> <span class="op">/</span> <span class="number">180f64</span>
 }
 
-<span class="kw">fn</span> <span class="ident">calc_angle_offset_q16</span>(<span class="ident">dist</span>: <span class="ident">u32</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">i32</span> {
+<span class="kw">fn</span> <span class="ident">calc_angle_offset_q16</span>(<span class="ident">dist</span>: <span class="ident">u32</span>) -&gt; <span class="ident">i32</span> {
     <span class="kw">if</span> <span class="ident">dist</span> <span class="op">&gt;</span><span class="op">=</span> <span class="number">50</span> <span class="op">*</span> <span class="number">4</span> {
         <span class="kw">const</span> <span class="ident">K1</span>: <span class="ident">i32</span> <span class="op">=</span> <span class="number">98361</span>;
         <span class="kw">let</span> <span class="ident">k2</span> <span class="op">=</span> <span class="ident">K1</span> <span class="op">/</span> (<span class="ident">dist</span> <span class="kw">as</span> <span class="ident">i32</span>);
@@ -210,7 +210,7 @@
 <span class="kw">const</span> <span class="ident">RPLIDAR_VARBIT_SCALE_LEVELS</span>: [<span class="ident">u32</span>; <span class="number">5</span>] <span class="op">=</span> [<span class="number">4</span>, <span class="number">3</span>, <span class="number">2</span>, <span class="number">1</span>, <span class="number">0</span>];
 
 <span class="doccomment">/// decode varbit encoded distance to flat distance and scale level</span>
-<span class="kw">fn</span> <span class="ident">varbit_scale_decode</span>(<span class="ident">scaled</span>: <span class="ident">u32</span>) <span class="op">-</span><span class="op">&gt;</span> (<span class="ident">u32</span>, <span class="ident">u32</span>) {
+<span class="kw">fn</span> <span class="ident">varbit_scale_decode</span>(<span class="ident">scaled</span>: <span class="ident">u32</span>) -&gt; (<span class="ident">u32</span>, <span class="ident">u32</span>) {
     <span class="kw">for</span> <span class="ident">i</span> <span class="kw">in</span> <span class="number">0</span>..<span class="ident">RPLIDAR_VARBIT_SCALE_SCALE_BASES</span>.<span class="ident">len</span>() {
         <span class="kw">let</span> <span class="ident">scale_base</span> <span class="op">=</span> <span class="ident">RPLIDAR_VARBIT_SCALE_SCALE_BASES</span>[<span class="ident">i</span>];
         <span class="kw">let</span> <span class="ident">target_base</span> <span class="op">=</span> <span class="ident">RPLIDAR_VARBIT_SCALE_TARGET_BASES</span>[<span class="ident">i</span>];
@@ -226,7 +226,7 @@
 }
 
 <span class="doccomment">/// parse ultra capsuled cabin to (major, predict1, predict2)</span>
-<span class="kw">fn</span> <span class="ident">parse_cabin</span>(<span class="ident">cabin</span>: <span class="ident">u32</span>) <span class="op">-</span><span class="op">&gt;</span> (<span class="ident">u32</span>, <span class="ident">i32</span>, <span class="ident">i32</span>) {
+<span class="kw">fn</span> <span class="ident">parse_cabin</span>(<span class="ident">cabin</span>: <span class="ident">u32</span>) -&gt; (<span class="ident">u32</span>, <span class="ident">i32</span>, <span class="ident">i32</span>) {
     (
         (<span class="ident">cabin</span> <span class="op">&amp;</span> <span class="number">0xfffu32</span>),
         ((<span class="ident">cabin</span> <span class="op">&lt;</span><span class="op">&lt;</span> <span class="number">10</span>) <span class="kw">as</span> <span class="ident">i32</span>) <span class="op">&gt;</span><span class="op">&gt;</span> <span class="number">22</span>,
@@ -234,8 +234,8 @@
     )
 }
 
-<span class="kw">fn</span> <span class="ident">predict</span>(<span class="ident">base</span>: <span class="ident">u32</span>, <span class="ident">predict</span>: <span class="ident">i32</span>, <span class="ident">scale_lvl</span>: <span class="ident">u32</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">u32</span> {
-    <span class="kw">if</span> ((<span class="ident">predict</span> <span class="kw">as</span> <span class="ident">u32</span>) <span class="op">=</span><span class="op">=</span> <span class="number">0xfffffe00u32</span>) <span class="op">|</span><span class="op">|</span> (<span class="ident">predict</span> <span class="op">=</span><span class="op">=</span> <span class="number">0x1ffi32</span>) {
+<span class="kw">fn</span> <span class="ident">predict</span>(<span class="ident">base</span>: <span class="ident">u32</span>, <span class="ident">predict</span>: <span class="ident">i32</span>, <span class="ident">scale_lvl</span>: <span class="ident">u32</span>) -&gt; <span class="ident">u32</span> {
+    <span class="kw">if</span> ((<span class="ident">predict</span> <span class="kw">as</span> <span class="ident">u32</span>) <span class="op">==</span> <span class="number">0xfffffe00u32</span>) <span class="op">|</span><span class="op">|</span> (<span class="ident">predict</span> <span class="op">==</span> <span class="number">0x1ffi32</span>) {
         <span class="number">0u32</span>
     } <span class="kw">else</span> {
         (((<span class="ident">predict</span> <span class="op">&lt;</span><span class="op">&lt;</span> <span class="ident">scale_lvl</span>) <span class="op">+</span> (<span class="ident">base</span> <span class="kw">as</span> <span class="ident">i32</span>)) <span class="kw">as</span> <span class="ident">u32</span>) <span class="op">&lt;</span><span class="op">&lt;</span> <span class="number">2</span>
@@ -247,11 +247,11 @@
     <span class="ident">next_major</span>: <span class="ident">u32</span>,
     <span class="ident">dist_predict1</span>: <span class="ident">i32</span>,
     <span class="ident">dist_predict2</span>: <span class="ident">i32</span>,
-) <span class="op">-</span><span class="op">&gt;</span> [<span class="ident">ParsedNode</span>; <span class="number">3</span>] {
+) -&gt; [<span class="ident">ParsedNode</span>; <span class="number">3</span>] {
     <span class="kw">let</span> (<span class="ident">dist_major</span>, <span class="ident">scale_lvl_1</span>) <span class="op">=</span> <span class="ident">varbit_scale_decode</span>(<span class="ident">dist_major</span>);
     <span class="kw">let</span> (<span class="ident">next_major</span>, <span class="ident">scale_lvl_2</span>) <span class="op">=</span> <span class="ident">varbit_scale_decode</span>(<span class="ident">next_major</span>);
 
-    <span class="kw">let</span> (<span class="ident">dist_base1</span>, <span class="ident">dist_base2</span>, <span class="ident">scale_lvl_1</span>) <span class="op">=</span> <span class="kw">if</span> (<span class="ident">dist_major</span> <span class="op">=</span><span class="op">=</span> <span class="number">0</span>) <span class="op">&amp;&amp;</span> (<span class="ident">next_major</span> <span class="op">!</span><span class="op">=</span> <span class="number">0</span>) {
+    <span class="kw">let</span> (<span class="ident">dist_base1</span>, <span class="ident">dist_base2</span>, <span class="ident">scale_lvl_1</span>) <span class="op">=</span> <span class="kw">if</span> (<span class="ident">dist_major</span> <span class="op">==</span> <span class="number">0</span>) <span class="op">&amp;&amp;</span> (<span class="ident">next_major</span> <span class="op">!</span><span class="op">=</span> <span class="number">0</span>) {
         (<span class="ident">next_major</span>, <span class="ident">next_major</span>, <span class="ident">scale_lvl_2</span>)
     } <span class="kw">else</span> {
         (<span class="ident">dist_major</span>, <span class="ident">next_major</span>, <span class="ident">scale_lvl_1</span>)
@@ -277,7 +277,7 @@
     ]
 }
 
-<span class="kw">fn</span> <span class="ident">angle_q16_to_angle_z_q14</span>(<span class="ident">angle_q16</span>: <span class="ident">u32</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">u16</span> {
+<span class="kw">fn</span> <span class="ident">angle_q16_to_angle_z_q14</span>(<span class="ident">angle_q16</span>: <span class="ident">u32</span>) -&gt; <span class="ident">u16</span> {
     ((<span class="ident">angle_q16</span> <span class="op">/</span> <span class="number">90</span>) <span class="op">&gt;</span><span class="op">&gt;</span> <span class="number">2</span>) <span class="kw">as</span> <span class="ident">u16</span>
 }
 
@@ -285,7 +285,7 @@
     <span class="ident">node</span>: <span class="kw-2">&amp;</span><span class="ident">ParsedNode</span>,
     <span class="ident">cur_angle_raw_q16</span>: <span class="ident">u32</span>,
     <span class="ident">angle_inc_q16</span>: <span class="ident">u32</span>,
-) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">RplidarResponseMeasurementNodeHq</span> {
+) -&gt; <span class="ident">RplidarResponseMeasurementNodeHq</span> {
     <span class="comment">// TODO (David): What is this?</span>
     <span class="comment">// let angle_q16 = (cur_angle_raw_q16 as i32) - (node.angle_offset_q16 as f64) as i32;</span>
     <span class="kw">let</span> <span class="ident">angle_q16</span> <span class="op">=</span>
@@ -303,7 +303,7 @@
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">parse_ultra_capsuled</span>(
     <span class="ident">cached_prev</span>: <span class="kw-2">&amp;</span><span class="ident">CachedPrevCapsule</span>,
     <span class="ident">nodes</span>: <span class="ident">RplidarResponseUltraCapsuleMeasurementNodes</span>,
-) <span class="op">-</span><span class="op">&gt;</span> (<span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">RplidarResponseMeasurementNodeHq</span><span class="op">&gt;</span>, <span class="ident">CachedPrevCapsule</span>) {
+) -&gt; (<span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">RplidarResponseMeasurementNodeHq</span><span class="op">&gt;</span>, <span class="ident">CachedPrevCapsule</span>) {
     <span class="kw">if</span> <span class="kw">let</span> <span class="ident">CachedPrevCapsule::UltraCapsuled</span>(<span class="ident">prev_capsule</span>) <span class="op">=</span> <span class="ident">cached_prev</span> {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">output_nodes</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">RplidarResponseMeasurementNodeHq</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">Vec::with_capacity</span>(<span class="number">32</span> <span class="op">*</span> <span class="number">3</span>);
 
@@ -321,7 +321,7 @@
         <span class="kw">let</span> <span class="ident">cabin_count</span> <span class="op">=</span> <span class="ident">prev_ultra_cabin</span>.<span class="ident">len</span>();
 
         <span class="kw">for</span> <span class="ident">i</span> <span class="kw">in</span> <span class="number">0</span>..<span class="ident">cabin_count</span> {
-            <span class="kw">let</span> <span class="ident">next_cabin</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">i</span> <span class="op">=</span><span class="op">=</span> <span class="ident">cabin_count</span> <span class="op">-</span> <span class="number">1</span> {
+            <span class="kw">let</span> <span class="ident">next_cabin</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">i</span> <span class="op">==</span> <span class="ident">cabin_count</span> <span class="op">-</span> <span class="number">1</span> {
                 <span class="ident">nodes</span>.<span class="ident">ultra_cabins</span>[<span class="number">0</span>]
             } <span class="kw">else</span> {
                 <span class="ident">prev_capsule</span>.<span class="ident">ultra_cabins</span>[<span class="ident">i</span> <span class="op">+</span> <span class="number">1</span>]
