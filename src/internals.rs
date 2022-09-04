@@ -10,7 +10,7 @@ pub const RPLIDAR_DEFAULT_CACHE_DEPTH: usize = 8192;
 /// Default motor PWM
 pub const RPLIDAR_DEFAULT_MOTOR_PWM: u16 = 600;
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, Eq, PartialEq)]
 pub enum CachedPrevCapsule {
     None,
     Capsuled(RplidarResponseCapsuleMeasurementNodes),

@@ -27,7 +27,7 @@ fn find_last_valid_index(scan: &[ScanPoint]) -> Option<usize> {
     None
 }
 
-fn tune_head(scan: &mut Vec<ScanPoint>, inc_origin_angle: f32) -> Result<()> {
+fn tune_head(scan: &mut [ScanPoint], inc_origin_angle: f32) -> Result<()> {
     if let Some(head_index) = find_first_valid_index(scan) {
         let mut i = head_index;
 
