@@ -1,0 +1,3 @@
+(function() {var implementors = {};
+implementors["rplidar_driver"] = [{"text":"impl <a class=\"trait\" href=\"https://doc.rust-lang.org/1.63.0/std/io/trait.Read.html\" title=\"trait std::io::Read\">Read</a> for <a class=\"struct\" href=\"rplidar_driver/rpos_drv/struct.RingByteBuffer.html\" title=\"struct rplidar_driver::rpos_drv::RingByteBuffer\">RingByteBuffer</a>","synthetic":false,"types":["rplidar_driver::rpos_drv::ring_byte_buffer::RingByteBuffer"]}];
+if (window.register_implementors) {window.register_implementors(implementors);} else {window.pending_implementors = implementors;}})()

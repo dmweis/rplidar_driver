@@ -1,0 +1,3 @@
+(function() {var implementors = {};
+implementors["rplidar_driver"] = [{"text":"impl <a class=\"trait\" href=\"https://doc.rust-lang.org/1.63.0/core/default/trait.Default.html\" title=\"trait core::default::Default\">Default</a> for <a class=\"struct\" href=\"rplidar_driver/struct.RplidarHostProtocol.html\" title=\"struct rplidar_driver::RplidarHostProtocol\">RplidarHostProtocol</a>","synthetic":false,"types":["rplidar_driver::protocol::RplidarHostProtocol"]}];
+if (window.register_implementors) {window.register_implementors(implementors);} else {window.pending_implementors = implementors;}})()

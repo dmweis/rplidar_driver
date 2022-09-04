@@ -1,0 +1,3 @@
+(function() {var implementors = {};
+implementors["rplidar_driver"] = [{"text":"impl&lt;T:&nbsp;SerialPort&gt; <a class=\"trait\" href=\"https://doc.rust-lang.org/1.63.0/core/ops/drop/trait.Drop.html\" title=\"trait core::ops::drop::Drop\">Drop</a> for <a class=\"struct\" href=\"rplidar_driver/struct.RplidarDevice.html\" title=\"struct rplidar_driver::RplidarDevice\">RplidarDevice</a>&lt;T&gt;","synthetic":false,"types":["rplidar_driver::RplidarDevice"]}];
+if (window.register_implementors) {window.register_implementors(implementors);} else {window.pending_implementors = implementors;}})()

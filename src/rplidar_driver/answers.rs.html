@@ -1,0 +1,293 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src/answers.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>answers.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../rplidar_driver/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div>
+        </a><h2 class="location"></h2>
+    </nav>
+    <nav class="sidebar"><a class="sidebar-logo" href="../../rplidar_driver/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div>
+        </a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../rplidar_driver/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><button type="button" id="help-button" title="help">?</button><div id="settings-menu" tabindex="-1">
+                                <a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div>
+                        </div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<span id="2">2</span>
+<span id="3">3</span>
+<span id="4">4</span>
+<span id="5">5</span>
+<span id="6">6</span>
+<span id="7">7</span>
+<span id="8">8</span>
+<span id="9">9</span>
+<span id="10">10</span>
+<span id="11">11</span>
+<span id="12">12</span>
+<span id="13">13</span>
+<span id="14">14</span>
+<span id="15">15</span>
+<span id="16">16</span>
+<span id="17">17</span>
+<span id="18">18</span>
+<span id="19">19</span>
+<span id="20">20</span>
+<span id="21">21</span>
+<span id="22">22</span>
+<span id="23">23</span>
+<span id="24">24</span>
+<span id="25">25</span>
+<span id="26">26</span>
+<span id="27">27</span>
+<span id="28">28</span>
+<span id="29">29</span>
+<span id="30">30</span>
+<span id="31">31</span>
+<span id="32">32</span>
+<span id="33">33</span>
+<span id="34">34</span>
+<span id="35">35</span>
+<span id="36">36</span>
+<span id="37">37</span>
+<span id="38">38</span>
+<span id="39">39</span>
+<span id="40">40</span>
+<span id="41">41</span>
+<span id="42">42</span>
+<span id="43">43</span>
+<span id="44">44</span>
+<span id="45">45</span>
+<span id="46">46</span>
+<span id="47">47</span>
+<span id="48">48</span>
+<span id="49">49</span>
+<span id="50">50</span>
+<span id="51">51</span>
+<span id="52">52</span>
+<span id="53">53</span>
+<span id="54">54</span>
+<span id="55">55</span>
+<span id="56">56</span>
+<span id="57">57</span>
+<span id="58">58</span>
+<span id="59">59</span>
+<span id="60">60</span>
+<span id="61">61</span>
+<span id="62">62</span>
+<span id="63">63</span>
+<span id="64">64</span>
+<span id="65">65</span>
+<span id="66">66</span>
+<span id="67">67</span>
+<span id="68">68</span>
+<span id="69">69</span>
+<span id="70">70</span>
+<span id="71">71</span>
+<span id="72">72</span>
+<span id="73">73</span>
+<span id="74">74</span>
+<span id="75">75</span>
+<span id="76">76</span>
+<span id="77">77</span>
+<span id="78">78</span>
+<span id="79">79</span>
+<span id="80">80</span>
+<span id="81">81</span>
+<span id="82">82</span>
+<span id="83">83</span>
+<span id="84">84</span>
+<span id="85">85</span>
+<span id="86">86</span>
+<span id="87">87</span>
+<span id="88">88</span>
+<span id="89">89</span>
+<span id="90">90</span>
+<span id="91">91</span>
+<span id="92">92</span>
+<span id="93">93</span>
+<span id="94">94</span>
+<span id="95">95</span>
+<span id="96">96</span>
+<span id="97">97</span>
+<span id="98">98</span>
+<span id="99">99</span>
+<span id="100">100</span>
+<span id="101">101</span>
+<span id="102">102</span>
+<span id="103">103</span>
+<span id="104">104</span>
+<span id="105">105</span>
+<span id="106">106</span>
+<span id="107">107</span>
+<span id="108">108</span>
+<span id="109">109</span>
+<span id="110">110</span>
+<span id="111">111</span>
+<span id="112">112</span>
+<span id="113">113</span>
+<span id="114">114</span>
+<span id="115">115</span>
+<span id="116">116</span>
+<span id="117">117</span>
+<span id="118">118</span>
+<span id="119">119</span>
+<span id="120">120</span>
+<span id="121">121</span>
+<span id="122">122</span>
+<span id="123">123</span>
+<span id="124">124</span>
+<span id="125">125</span>
+<span id="126">126</span>
+<span id="127">127</span>
+<span id="128">128</span>
+<span id="129">129</span>
+<span id="130">130</span>
+<span id="131">131</span>
+<span id="132">132</span>
+<span id="133">133</span>
+<span id="134">134</span>
+<span id="135">135</span>
+<span id="136">136</span>
+<span id="137">137</span>
+<span id="138">138</span>
+<span id="139">139</span>
+<span id="140">140</span>
+<span id="141">141</span>
+<span id="142">142</span>
+</pre><pre class="rust"><code><span class="doccomment">/// Device info response</span>
+<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">RPLIDAR_ANS_TYPE_DEVINFO</span>: <span class="ident">u8</span> <span class="op">=</span> <span class="number">0x4</span>;
+
+<span class="doccomment">/// Rplidar device info data strcture</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Copy</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
+<span class="attribute">#[<span class="ident">repr</span>(<span class="ident">packed</span>)]</span>
+<span class="attribute">#[<span class="ident">repr</span>(<span class="ident">C</span>)]</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">RplidarResponseDeviceInfo</span> {
+    <span class="kw">pub</span> <span class="ident">model</span>: <span class="ident">u8</span>,
+    <span class="kw">pub</span> <span class="ident">firmware_version</span>: <span class="ident">u16</span>,
+    <span class="kw">pub</span> <span class="ident">hardware_version</span>: <span class="ident">u8</span>,
+    <span class="kw">pub</span> <span class="ident">serialnum</span>: [<span class="ident">u8</span>; <span class="number">16</span>],
+}
+
+<span class="doccomment">/// Device health</span>
+<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">RPLIDAR_ANS_TYPE_DEVHEALTH</span>: <span class="ident">u8</span> <span class="op">=</span> <span class="number">0x6</span>;
+
+<span class="doccomment">/// Rplidar device health info data structure</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Copy</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
+<span class="attribute">#[<span class="ident">repr</span>(<span class="ident">packed</span>)]</span>
+<span class="attribute">#[<span class="ident">repr</span>(<span class="ident">C</span>)]</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">RplidarResponseDeviceHealth</span> {
+    <span class="kw">pub</span> <span class="ident">status</span>: <span class="ident">u8</span>,
+    <span class="kw">pub</span> <span class="ident">error_code</span>: <span class="ident">u16</span>,
+}
+
+<span class="comment">// health status</span>
+
+<span class="doccomment">/// The LIDAR is very healthy</span>
+<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">RPLIDAR_HEALTH_STATUS_OK</span>: <span class="ident">u8</span> <span class="op">=</span> <span class="number">0</span>;
+
+<span class="doccomment">/// Some warning occurs with the device, but still work</span>
+<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">RPLIDAR_HEALTH_STATUS_WARNING</span>: <span class="ident">u8</span> <span class="op">=</span> <span class="number">1</span>;
+
+<span class="doccomment">/// Some fatal error occurs, the device is not working anymore</span>
+<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">RPLIDAR_HEALTH_STATUS_ERROR</span>: <span class="ident">u8</span> <span class="op">=</span> <span class="number">2</span>;
+
+<span class="comment">// Measurement ansers</span>
+
+<span class="doccomment">/// Legacy measurement answer (1pt per response)</span>
+<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">RPLIDAR_ANS_TYPE_MEASUREMENT</span>: <span class="ident">u8</span> <span class="op">=</span> <span class="number">0x81</span>;
+
+<span class="doccomment">/// Rplidar measurement nodes</span>
+<span class="doccomment">/// Max distance: 16.384 meters</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Copy</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
+<span class="attribute">#[<span class="ident">repr</span>(<span class="ident">packed</span>)]</span>
+<span class="attribute">#[<span class="ident">repr</span>(<span class="ident">C</span>)]</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">RplidarResponseMeasurementNode</span> {
+    <span class="kw">pub</span> <span class="ident">sync_quality</span>: <span class="ident">u8</span>,
+    <span class="kw">pub</span> <span class="ident">angle_q6_checkbit</span>: <span class="ident">u16</span>,
+    <span class="kw">pub</span> <span class="ident">distance_q2</span>: <span class="ident">u16</span>,
+}
+
+<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">RPLIDAR_RESP_MEASUREMENT_SYNCBIT</span>: <span class="ident">u8</span> <span class="op">=</span> <span class="number">1</span>;
+<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">RPLIDAR_RESP_MEASUREMENT_QUALITY_SHIFT</span>: <span class="ident">usize</span> <span class="op">=</span> <span class="number">2</span>;
+<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">RPLIDAR_RESP_MEASUREMENT_ANGLE_SHIFT</span>: <span class="ident">usize</span> <span class="op">=</span> <span class="number">1</span>;
+<span class="comment">// pub const RPLIDAR_RESP_MEASUREMENT_CHECKBIT : u8 = 1;</span>
+
+<span class="doccomment">/// Capsuled measurement answer (32pts per response)</span>
+<span class="doccomment">/// Added in FW ver 1.17</span>
+<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">RPLIDAR_ANS_TYPE_MEASUREMENT_CAPSULED</span>: <span class="ident">u8</span> <span class="op">=</span> <span class="number">0x82</span>;
+
+<span class="doccomment">/// The cabin data structure in the capsuled measurement ndoes</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Copy</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
+<span class="attribute">#[<span class="ident">repr</span>(<span class="ident">packed</span>)]</span>
+<span class="attribute">#[<span class="ident">repr</span>(<span class="ident">C</span>)]</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">RplidarResponseCabinNodes</span> {
+    <span class="kw">pub</span> <span class="ident">distance_angle_1</span>: <span class="ident">u16</span>,
+    <span class="kw">pub</span> <span class="ident">distance_angle_2</span>: <span class="ident">u16</span>,
+    <span class="kw">pub</span> <span class="ident">offset_angles_q3</span>: <span class="ident">u8</span>,
+}
+
+<span class="doccomment">/// The data structure for each response packet of capsuled measurements</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Copy</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
+<span class="attribute">#[<span class="ident">repr</span>(<span class="ident">packed</span>)]</span>
+<span class="attribute">#[<span class="ident">repr</span>(<span class="ident">C</span>)]</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">RplidarResponseCapsuleMeasurementNodes</span> {
+    <span class="kw">pub</span> <span class="ident">s_checksum_1</span>: <span class="ident">u8</span>,
+    <span class="kw">pub</span> <span class="ident">s_checksum_2</span>: <span class="ident">u8</span>,
+    <span class="kw">pub</span> <span class="ident">start_angle_sync_q6</span>: <span class="ident">u16</span>,
+    <span class="kw">pub</span> <span class="ident">cabins</span>: [<span class="ident">RplidarResponseCabinNodes</span>; <span class="number">16</span>],
+}
+
+<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">RPLIDAR_RESP_MEASUREMENT_EXP_SYNC_1</span>: <span class="ident">u8</span> <span class="op">=</span> <span class="number">0xA</span>;
+<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">RPLIDAR_RESP_MEASUREMENT_EXP_SYNC_2</span>: <span class="ident">u8</span> <span class="op">=</span> <span class="number">0x5</span>;
+
+<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">RPLIDAR_ANS_TYPE_MEASUREMENT_HQ</span>: <span class="ident">u8</span> <span class="op">=</span> <span class="number">0x83</span>;
+
+<span class="doccomment">/// High Quailty Measurement Node</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Copy</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
+<span class="attribute">#[<span class="ident">repr</span>(<span class="ident">packed</span>)]</span>
+<span class="attribute">#[<span class="ident">repr</span>(<span class="ident">C</span>)]</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">RplidarResponseMeasurementNodeHq</span> {
+    <span class="kw">pub</span> <span class="ident">angle_z_q14</span>: <span class="ident">u16</span>,
+    <span class="kw">pub</span> <span class="ident">dist_mm_q2</span>: <span class="ident">u32</span>,
+    <span class="kw">pub</span> <span class="ident">quality</span>: <span class="ident">u8</span>,
+    <span class="kw">pub</span> <span class="ident">flag</span>: <span class="ident">u8</span>,
+}
+
+<span class="doccomment">/// HQ Capsuled Measurement Nodes</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Copy</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
+<span class="attribute">#[<span class="ident">repr</span>(<span class="ident">packed</span>)]</span>
+<span class="attribute">#[<span class="ident">repr</span>(<span class="ident">C</span>)]</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">RplidarResponseHqCapsuledMeasurementNodes</span> {
+    <span class="kw">pub</span> <span class="ident">sync_byte</span>: <span class="ident">u8</span>,
+    <span class="kw">pub</span> <span class="ident">timestamp</span>: <span class="ident">u64</span>,
+    <span class="kw">pub</span> <span class="ident">nodes</span>: [<span class="ident">RplidarResponseMeasurementNodeHq</span>; <span class="number">16</span>],
+    <span class="kw">pub</span> <span class="ident">crc32</span>: <span class="ident">u32</span>,
+}
+
+<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">RPLIDAR_RESP_HQ_FLAG_SYNCBIT</span>: <span class="ident">u8</span> <span class="op">=</span> <span class="number">1</span>;
+<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">RPLIDAR_RESP_MEASUREMENT_HQ_SYNC</span>: <span class="ident">u8</span> <span class="op">=</span> <span class="number">0xA5</span>;
+
+<span class="comment">// Added in FW ver 1.17</span>
+<span class="comment">// pub const RPLIDAR_ANS_TYPE_SAMPLE_RATE : u8 = 0x15;</span>
+
+<span class="doccomment">/// Ultra Capsuled measurement answer (96pts per response)</span>
+<span class="doccomment">/// added in FW ver 1.23alpha</span>
+<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">RPLIDAR_ANS_TYPE_MEASUREMENT_CAPSULED_ULTRA</span>: <span class="ident">u8</span> <span class="op">=</span> <span class="number">0x84</span>;
+
+<span class="doccomment">/// The data structure for each response packet of ultra capsuled measurements</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Copy</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
+<span class="attribute">#[<span class="ident">repr</span>(<span class="ident">packed</span>)]</span>
+<span class="attribute">#[<span class="ident">repr</span>(<span class="ident">C</span>)]</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">RplidarResponseUltraCapsuleMeasurementNodes</span> {
+    <span class="kw">pub</span> <span class="ident">s_checksum_1</span>: <span class="ident">u8</span>,
+    <span class="kw">pub</span> <span class="ident">s_checksum_2</span>: <span class="ident">u8</span>,
+    <span class="kw">pub</span> <span class="ident">start_angle_sync_q6</span>: <span class="ident">u16</span>,
+    <span class="kw">pub</span> <span class="ident">ultra_cabins</span>: [<span class="ident">u32</span>; <span class="number">32</span>],
+}
+
+<span class="doccomment">/// Answer type for getting LIDAR configuration</span>
+<span class="doccomment">/// added in FW ver 1.24</span>
+<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">RPLIDAR_ANS_TYPE_GET_LIDAR_CONF</span>: <span class="ident">u8</span> <span class="op">=</span> <span class="number">0x20</span>;
+
+<span class="comment">// pub const RPLIDAR_ANS_TYPE_SET_LIDAR_CONF : u8 = 0x21;</span>
+
+<span class="doccomment">/// Get capability of accessory board</span>
+<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">RPLIDAR_ANS_TYPE_ACC_BOARD_FLAG</span>: <span class="ident">u8</span> <span class="op">=</span> <span class="number">0xFF</span>;
+
+<span class="doccomment">/// Flag indicate that accessory board support motor control</span>
+<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">RPLIDAR_RESP_ACC_BOARD_FLAG_MOTOR_CTRL_SUPPORT_MASK</span>: <span class="ident">u32</span> <span class="op">=</span> <span class="number">0x1</span>;
+</code></pre></div>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="rplidar_driver" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.63.0 (4b91a6ea7 2022-08-08)" ></div>
+</body></html>
