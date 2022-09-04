@@ -343,7 +343,7 @@ where
             &param,
             timeout,
         )?;
-        return parse_resp_data!(ans_type_data, u8);
+        parse_resp_data!(ans_type_data, u8)
     }
 
     /// get scan mode name
@@ -373,7 +373,7 @@ where
     fn get_scan_mode_count_with_timeout(&mut self, timeout: Duration) -> Result<u16> {
         let scan_mode_count_data =
             self.get_lidar_conf_with_timeout(RPLIDAR_CONF_SCAN_MODE_COUNT, timeout)?;
-        return parse_resp_data!(scan_mode_count_data, u16);
+        parse_resp_data!(scan_mode_count_data, u16)
     }
 
     /// get scan mode of specific scan mode id
@@ -601,7 +601,7 @@ where
         let scan_mode_data =
             self.get_lidar_conf_with_timeout(RPLIDAR_CONF_SCAN_MODE_TYPICAL, timeout)?;
 
-        return parse_resp_data!(scan_mode_data, u16);
+        parse_resp_data!(scan_mode_data, u16)
     }
 
     /// get all supported scan modes supported by the LIDAR

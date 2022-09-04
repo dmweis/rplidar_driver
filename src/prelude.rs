@@ -86,7 +86,7 @@ pub struct ScanMode {
 }
 
 /// Scan options
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct ScanOptions {
     /// Specify this field to force use specific scan mode
     pub scan_mode: Option<u16>,
@@ -137,7 +137,7 @@ impl ScanOptions {
 }
 
 /// Health status of device
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub enum Health {
     Healthy,
     Warning(u16),

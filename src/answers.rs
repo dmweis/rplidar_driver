@@ -2,7 +2,7 @@
 pub const RPLIDAR_ANS_TYPE_DEVINFO: u8 = 0x4;
 
 /// Rplidar device info data strcture
-#[derive(Debug, Copy, Clone, PartialEq)]
+#[derive(Debug, Copy, Clone, PartialEq, Eq)]
 #[repr(packed)]
 #[repr(C)]
 pub struct RplidarResponseDeviceInfo {
@@ -16,7 +16,7 @@ pub struct RplidarResponseDeviceInfo {
 pub const RPLIDAR_ANS_TYPE_DEVHEALTH: u8 = 0x6;
 
 /// Rplidar device health info data structure
-#[derive(Debug, Copy, Clone, PartialEq)]
+#[derive(Debug, Copy, Clone, PartialEq, Eq)]
 #[repr(packed)]
 #[repr(C)]
 pub struct RplidarResponseDeviceHealth {
@@ -42,7 +42,7 @@ pub const RPLIDAR_ANS_TYPE_MEASUREMENT: u8 = 0x81;
 
 /// Rplidar measurement nodes
 /// Max distance: 16.384 meters
-#[derive(Debug, Copy, Clone, PartialEq)]
+#[derive(Debug, Copy, Clone, PartialEq, Eq)]
 #[repr(packed)]
 #[repr(C)]
 pub struct RplidarResponseMeasurementNode {
@@ -61,7 +61,7 @@ pub const RPLIDAR_RESP_MEASUREMENT_ANGLE_SHIFT: usize = 1;
 pub const RPLIDAR_ANS_TYPE_MEASUREMENT_CAPSULED: u8 = 0x82;
 
 /// The cabin data structure in the capsuled measurement ndoes
-#[derive(Debug, Copy, Clone, PartialEq)]
+#[derive(Debug, Copy, Clone, PartialEq, Eq)]
 #[repr(packed)]
 #[repr(C)]
 pub struct RplidarResponseCabinNodes {
@@ -71,7 +71,7 @@ pub struct RplidarResponseCabinNodes {
 }
 
 /// The data structure for each response packet of capsuled measurements
-#[derive(Debug, Copy, Clone, PartialEq)]
+#[derive(Debug, Copy, Clone, PartialEq, Eq)]
 #[repr(packed)]
 #[repr(C)]
 pub struct RplidarResponseCapsuleMeasurementNodes {
@@ -87,7 +87,7 @@ pub const RPLIDAR_RESP_MEASUREMENT_EXP_SYNC_2: u8 = 0x5;
 pub const RPLIDAR_ANS_TYPE_MEASUREMENT_HQ: u8 = 0x83;
 
 /// High Quailty Measurement Node
-#[derive(Debug, Copy, Clone, PartialEq)]
+#[derive(Debug, Copy, Clone, PartialEq, Eq)]
 #[repr(packed)]
 #[repr(C)]
 pub struct RplidarResponseMeasurementNodeHq {
@@ -98,7 +98,7 @@ pub struct RplidarResponseMeasurementNodeHq {
 }
 
 /// HQ Capsuled Measurement Nodes
-#[derive(Debug, Copy, Clone, PartialEq)]
+#[derive(Debug, Copy, Clone, PartialEq, Eq)]
 #[repr(packed)]
 #[repr(C)]
 pub struct RplidarResponseHqCapsuledMeasurementNodes {
@@ -119,7 +119,7 @@ pub const RPLIDAR_RESP_MEASUREMENT_HQ_SYNC: u8 = 0xA5;
 pub const RPLIDAR_ANS_TYPE_MEASUREMENT_CAPSULED_ULTRA: u8 = 0x84;
 
 /// The data structure for each response packet of ultra capsuled measurements
-#[derive(Debug, Copy, Clone, PartialEq)]
+#[derive(Debug, Copy, Clone, PartialEq, Eq)]
 #[repr(packed)]
 #[repr(C)]
 pub struct RplidarResponseUltraCapsuleMeasurementNodes {

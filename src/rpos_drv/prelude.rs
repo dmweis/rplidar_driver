@@ -3,7 +3,7 @@ use std::io;
 pub use super::errors::*;
 
 /// A message send via channels
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Message {
     /// The command
     pub cmd: u8,

@@ -11,7 +11,7 @@ use std::io::{Read, Write};
 /// buffer.write(&[0, 1, 2, 3]).unwrap();
 /// assert_eq!(buffer.len(), 4 as usize);
 /// ```
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct RingByteBuffer {
     buf: Vec<u8>,
     head: usize,
